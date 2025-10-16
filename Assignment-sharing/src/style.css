@@ -1,0 +1,12 @@
+/* Global reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: #1252b8;    /* Dark background */
+  color: #e0e0e0;            /* Light gray text */
+}

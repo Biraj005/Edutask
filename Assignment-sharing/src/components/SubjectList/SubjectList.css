@@ -1,0 +1,72 @@
+.subject-list-container {
+  max-width: 900px;
+  margin: auto;
+}
+
+.subject-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.subject-item {
+  display: flex;
+  align-items: center;
+  background: #2c2c2c;
+  border-radius: 10px;
+  padding: 1.2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.subject-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.subject-code {
+  background-color: #ffd166; 
+  color: #121212;
+  font-weight: 700;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  margin-right: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.subject-details {
+  color: #e0e0e0;
+  flex-grow: 1;
+}
+
+.subject-name {
+  margin: 0 0 0.3rem 0;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.subject-description {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #b0b0b0;
+}
+
+.notification-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 1rem;
+}
+
+.notification-count {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #ffd166; 
+}
+
+.notification-bell-item {
+  width: 22px;
+  height: 22px;
+  color: #ffd166; 
+}

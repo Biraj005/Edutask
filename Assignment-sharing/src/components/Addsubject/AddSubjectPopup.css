@@ -1,0 +1,139 @@
+/* components/AddSubjectPopup.css */
+
+/* The semi-transparent background overlay with blur effect */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* The popup form container */
+.popup-content {
+    background-color: #2c2c2c;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: scaleIn 0.3s ease-out;
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #444;
+}
+
+.popup-header h2 {
+    margin: 0;
+    color: #ffd166;
+    font-size: 1.5rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: #a0a0a0;
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s, transform 0.2s;
+}
+.close-btn:hover {
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+/* Form Styles */
+.add-subject-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    color: #b0b0b0;
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+}
+
+.form-group input {
+    background-color: #383838;
+    border: 1px solid #555;
+    color: #e0e0e0;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+    border-color: #ffd166;
+    box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.2);
+}
+
+.create-subject-btn {
+    background-color: #ffd166;
+    color: #121212;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.create-subject-btn:hover {
+    background-color: #e6b800;
+    transform: translateY(-2px);
+}
+
+
+
+.form-group textarea {
+    background-color: #383838;
+    border: 1px solid #555;
+    color: #e0e0e0;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit; /* Ensures it uses the same font as the inputs */
+    resize: vertical; /* Allows the user to resize it vertically */
+}
+
+.form-group textarea:focus {
+    border-color: #ffd166;
+    box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.2);
+}
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}

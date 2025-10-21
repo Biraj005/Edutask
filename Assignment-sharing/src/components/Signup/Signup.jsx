@@ -1,49 +1,49 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../Store/AuthContext";
 import "./Signup.css";
 
-const Signup = ({changeForm}) => {
+const Signup = ({ changeForm }) => {
+
+  const navigte = useNavigate();
+  const { signupHandle ,signupgaeLoading,
+    loggedIn,setLoggedIn
+  } = useContext(AuthContext);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     department: "",
-    passingYear: "",
-    userType: "student",
+    passingyear: "",
+    type: "student",
     password: "",
     confirmPassword: "",
-    termsAccepted: false
   });
+  useEffect(()=>{
+    if(loggedIn){
+      navigte('/home')
+    }
+  },[loggedIn])
 
   const [teacher, setTeacher] = useState(false);
 
-  const selectedOptionChange = (e) => {
-    setTeacher(e.target.value === "teacher");
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value
-    });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    if (name === "type") {
+      setTeacher(value === "teacher");
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!formData.termsAccepted) {
-      alert("You must accept the Terms & Conditions.");
-      return;
-    }
-
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-
-    console.log(formData);
-    // Add signup logic here
+    signupHandle(formData);
   };
 
   return (
@@ -76,7 +76,9 @@ const Signup = ({changeForm}) => {
           className="user-type-select"
           required
         >
-          <option value="" disabled>Select Department</option>
+          <option value="" disabled>
+            Select Department
+          </option>
           <option value="CSE">CSE</option>
           <option value="ECE">ECE</option>
           <option value="IT">IT</option>
@@ -97,9 +99,9 @@ const Signup = ({changeForm}) => {
         )}
 
         <select
-          name="userType"
-          value={formData.userType}
-          onChange={selectedOptionChange}
+          name="type"
+          value={formData.type}
+          onChange={handleChange} 
           className="user-type-select"
           required
         >
@@ -123,9 +125,12 @@ const Signup = ({changeForm}) => {
           onChange={handleChange}
           required
         />
-        <button type="submit" className="signup-btn">Sign Up</button>
+        <button type="submit" className="signup-btn">
+            {signupgaeLoading ? "Signing Up..." : "Sign Up"}
+        </button>
         <p className="login-link">
-          Already have an account? <Link onClick={()=>changeForm(true)}>Login</Link>
+          Already have an account?{" "}
+          <Link onClick={() => changeForm(true)}>Login</Link>
         </p>
       </form>
     </div>

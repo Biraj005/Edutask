@@ -1,16 +1,27 @@
 import React, { useState } from 'react'
 import Login from '../components/Login/Login';
 import Signup from '../components/Signup/Signup'
+import { useEffect } from 'react';
+import { useContext } from 'react';
+import { AuthContext } from '../Store/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
-function Loginpage() {
-    const [login,setLogin] = useState(false);
+function LoginPage() {
+  const [login, setLogin] = useState(true);
+  const { loggedIn, loginhandle, signupHandle } = useContext(AuthContext);
+
+
+  
   return (
     <>
-      {login ?
-       <Login changeForm={setLogin}/>:
-       <Signup changeForm={setLogin}/>}
+      {login ? (
+        <Login changeForm={setLogin} loginhandle={loginhandle} />
+      ) : (
+        <Signup changeForm={setLogin} signupHandle={signupHandle} />
+      )}
     </>
-  )
+  );
 }
 
-export default Loginpage
+
+export default LoginPage

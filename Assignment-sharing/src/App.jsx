@@ -1,26 +1,47 @@
-// src/App.js
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useContext } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import Homepage from "./pages/Homepage";
 import Loginpage from "./pages/Loginpage";
 import Dashboard from "./pages/Dasboard";
 import SubjectCard from "./components/SubjectCard/SubjectCard";
-import { ThemeContextProvider } from "./Store/ThemeContext";
+import { ToastContainer } from "react-toastify";
+import { AuthContext } from "./Store/AuthContext";
 
 function App() {
+  const { loggedIn } = useContext(AuthContext);
+
   return (
     <>
-      <ThemeContextProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/login" element={<Loginpage/>} />
-            <Route path="/home" element={<Dashboard/>} />
-            <Route path="/subject" element={<SubjectCard/>} />
-          </Routes>
-        </BrowserRouter>
-      </ThemeContextProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route
+            path="/login"
+            element={loggedIn ? <Navigate to="/home" /> : <Loginpage />}
+          />
+          <Route
+            path="/home"
+            element={loggedIn ? <Dashboard /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/subject"
+            element={loggedIn ? <SubjectCard /> : <Navigate to="/login" />}
+          />
+        </Routes>
+      </BrowserRouter>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </>
   );
 }

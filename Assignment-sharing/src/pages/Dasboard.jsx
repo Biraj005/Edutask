@@ -5,13 +5,21 @@ import Sidebar from '../components/Sidbar/Sidebar';
 import AddSubjectPopup from '../components/Addsubject/AddSubjectPopup';
 import './Dashboard.css';
 import { ThemeContext } from '../Store/ThemeContext';
+import { AuthContext } from '../Store/AuthContext';
+import { useEffect } from 'react';
+
 
 const Dashboard = () => {
+
+     const { loggedIn} = useContext(AuthContext);
+    
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [isPopupOpen, setPopupOpen] = useState(false);
 
     const navigate = useNavigate();
-    const { user, subjectsData, setSubjectsData, setSelectedSubject } = useContext(ThemeContext);
+    const { user, subjectsData, 
+           setSubjectsData, setSelectedSubject 
+    } = useContext(ThemeContext);
 
     const handleSubjectSelect = (subject) => {
         setSelectedSubject(subject);
@@ -22,7 +30,6 @@ const Dashboard = () => {
         setSubjectsData(prev => [...prev, { ...newSubjectData, pendingTasks: 0, tasks: [] }]);
         setPopupOpen(false);
     };
-
     return (
         <div className="dashboard-container">
             {isSidebarOpen && <Sidebar user={user} onClose={() => setSidebarOpen(false)} />}

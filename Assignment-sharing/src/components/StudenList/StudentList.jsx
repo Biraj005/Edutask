@@ -2,6 +2,8 @@ import React from 'react';
 import './StudentList.css';
 
 const StudentList = ({ students, onRemove, onClose }) => {
+
+    
     return (
         <div className="student-list-container">
             <div className="student-list-header">

@@ -1,17 +1,27 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
+import { AuthContext } from "../../Store/AuthContext";
 
 const Login = ({changeForm}) => {
-  const [role, setRole] = useState("teacher"); // default role
+  const [role, setRole] = useState("teacher"); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const {loginhandle,loginpgaeLoading, setLoginPageLoading,loggedIn} = useContext(AuthContext);
+  const navigate = useNavigate();
 
+  // useEffect(()=>{
+  //   console.log("Inside login component",loggedIn);
+  //   if(loggedIn){
+  //     navigate("/home");
+  //   }
+  // },[loggedIn]);
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(`Role: ${role}, Email: ${email}, Password: ${password}`);
+    const Data ={email,password};
+    loginhandle(Data);
+    
   };
-
   return (
     <div className="login-container">
       <div className="role-switch">
@@ -47,7 +57,7 @@ const Login = ({changeForm}) => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit" className="login-btn">Login</button>
+        <button type="submit" className="login-btn">{loginpgaeLoading ? "Logining.....":"Login"}</button>
          <p className="login-link">
           Create acccount <Link onClick={()=>changeForm(false)}>signup</Link>
         </p>

@@ -1,38 +1,38 @@
 import React, { useState } from 'react';
 import './FindStudent.css';
+import { useContext } from 'react';
+import { AuthContext } from '../../Store/AuthContext';
 
 const FindStudent = ({ onSearch, onClose, onAddStudent }) => {
-    const [searchQuery, setSearchQuery] = useState({ name: '', department: '', email: '', roll: '' });
-    const [searchResults, setSearchResults] = useState([{
-    name: "Alex Doe",
-    department: "Computer Science",
-    passingYear: 2024,
-    roll: "21CS101"
-    }]);
+    const {selectedSubject} = useContext(AuthContext);
+    const [searchQuery, setSearchQuery] = useState({ name: '', department: '', email: '', roll: ''});
+    const [searchResults, setSearchResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const {studenAddLoading,setStudentAddLoading,addStudent} = useContext(AuthContext);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setSearchQuery(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSearchClick = async () => {
-        if (!searchQuery.name && !searchQuery.department && !searchQuery.email && !searchQuery.roll) {
-            alert("Please enter at least one search field.");
-            return;
-        }
-        setLoading(true);
-        setError(null);
-        try {
-            const results = await onSearch(searchQuery);
-            setSearchResults(results);
-        } catch (err) {
-            setError('Failed to fetch students. Please try again.');
-        } finally {
-            setLoading(false);
-        }
-    };
+    // const handleSearchClick = async () => {
+    //     if (!searchQuery.name && !searchQuery.department && !searchQuery.email && !searchQuery.roll) {
+    //         alert("Please enter at least one search field.");
+    //         return;
+    //     }
+    //     setLoading(true);
+    //     setError(null);
+    //     try {
+    //         const results = await onSearch(searchQuery);
+    //         setSearchResults(results);
+    //     } catch (err) {
+    //         setError('Failed to fetch students. Please try again.');
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
 
     return (
         <div className="find-student-container">
@@ -46,8 +46,8 @@ const FindStudent = ({ onSearch, onClose, onAddStudent }) => {
                 <input type="text" name="department" placeholder="Search by Department" value={searchQuery.department} onChange={handleInputChange} />
                 <input type="email" name="email" placeholder="Search by Email" value={searchQuery.email} onChange={handleInputChange} />
                 <input type="text" name="roll" placeholder="Search by Roll Number" value={searchQuery.roll} onChange={handleInputChange} />
-                <button className="search-btn" onClick={handleSearchClick} disabled={loading}>
-                    {loading ? 'Searching...' : 'Search'}
+                <button className="search-btn" onClick={()=>onAddStudent(searchQuery)} disabled={loading}>
+                    {studenAddLoading ? 'Searching...' : 'Search'}
                 </button>
             </div>
 

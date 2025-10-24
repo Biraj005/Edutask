@@ -1,9 +1,10 @@
-
 import React from 'react';
-
 import './Sidebar.css'
+import { useContext } from 'react';
+import { AuthContext } from '../../Store/AuthContext';
 
 const Sidebar = ({ user, onClose }) => {
+  const {Logout}  = useContext(AuthContext);
   return (
  
     <div className="sidebar-overlay" onClick={onClose}>
@@ -28,7 +29,7 @@ const Sidebar = ({ user, onClose }) => {
         </nav>
 
         <div className="sidebar-footer">
-          <a href="#" className="nav-item logout">Logout</a>
+          <a onClick={Logout} href="#" className="nav-item logout">Logout</a>
         </div>
       </aside>
     </div>

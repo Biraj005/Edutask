@@ -6,31 +6,29 @@ import "./Signup.css";
 const Signup = ({ changeForm }) => {
 
   const navigte = useNavigate();
-  const { signupHandle ,signupgaeLoading,
-    loggedIn,setLoggedIn
-  } = useContext(AuthContext);
+  const { signupHandle, signupgaeLoading, loggedIn, setLoggedIn } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     department: "",
-    passingyear: "",
+    passingYear: "", 
     type: "student",
     password: "",
     confirmPassword: "",
   });
-  useEffect(()=>{
-    if(loggedIn){
-      navigte('/home')
-    }
-  },[loggedIn])
 
   const [teacher, setTeacher] = useState(false);
+
+  useEffect(() => {
+    if (loggedIn) {
+      navigte('/home');
+    }
+  }, [loggedIn, navigte]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-
     if (name === "type") {
       setTeacher(value === "teacher");
     }
@@ -43,7 +41,10 @@ const Signup = ({ changeForm }) => {
       alert("Passwords do not match!");
       return;
     }
-    signupHandle(formData);
+    const submitData = { ...formData };
+    if (teacher) delete submitData.passingYear;
+
+    signupHandle(submitData);
   };
 
   return (
@@ -101,7 +102,7 @@ const Signup = ({ changeForm }) => {
         <select
           name="type"
           value={formData.type}
-          onChange={handleChange} 
+          onChange={handleChange}
           className="user-type-select"
           required
         >
@@ -126,7 +127,7 @@ const Signup = ({ changeForm }) => {
           required
         />
         <button type="submit" className="signup-btn">
-            {signupgaeLoading ? "Signing Up..." : "Sign Up"}
+          {signupgaeLoading ? "Signing Up..." : "Sign Up"}
         </button>
         <p className="login-link">
           Already have an account?{" "}

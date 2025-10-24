@@ -25,6 +25,15 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: null,
   },
+  tasks:{
+
+  },
+  subjects: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "subjects", 
+    },
+  ],
 });
 
 const userModel =   mongoose.model("/user", userSchema);

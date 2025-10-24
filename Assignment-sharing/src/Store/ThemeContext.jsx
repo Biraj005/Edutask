@@ -42,7 +42,7 @@ export const ThemeContextProvider = ({ children }) => {
             name: "Python Programming",
             description: "Introduction to programming concepts...",
             pendingTasks: 0,
-            students: [ // Add this array
+            students: [ 
                 "Alice Johnson",
                 "Bob Williams",
                 "Charlie Brown",

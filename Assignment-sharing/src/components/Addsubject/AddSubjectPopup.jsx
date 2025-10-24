@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import './AddSubjectPopup.css';
+import { AuthContext } from '../../Store/AuthContext';
 
 const AddSubjectPopup = ({ onClose, onSubmit }) => {
+
+    const {addSubjectLoading,addSubject} =useContext(AuthContext);
     const [formData, setFormData] = useState({
         name: '',
-        description: '', // 1. Added description to state
+        description: '', 
         semester: '',
         code: '',
     });
@@ -19,12 +22,12 @@ const AddSubjectPopup = ({ onClose, onSubmit }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // 2. Updated validation to include description
         if (!formData.name || !formData.description || !formData.semester || !formData.code) {
             alert('Please fill out all fields.');
             return;
         }
-        onSubmit(formData);
+        addSubject(formData);
+        console.log(formData);
     };
 
     return (
@@ -48,7 +51,6 @@ const AddSubjectPopup = ({ onClose, onSubmit }) => {
                         />
                     </div>
 
-                    {/* --- 3. NEW DESCRIPTION FIELD --- */}
                     <div className="form-group">
                         <label htmlFor="description">Description</label>
                         <textarea
@@ -60,9 +62,7 @@ const AddSubjectPopup = ({ onClose, onSubmit }) => {
                             rows="3"
                             required
                         />
-                    </div>
-                    {/* --- END OF NEW FIELD --- */}
-                    
+                    </div>                    
                     <div className="form-group">
                         <label htmlFor="semester">Semester</label>
                         <input
@@ -90,7 +90,7 @@ const AddSubjectPopup = ({ onClose, onSubmit }) => {
                         />
                     </div>
                     <button type="submit" className="create-subject-btn">
-                        Create Subject
+                        {addSubjectLoading ?"Adding subject..." :"Create Subject"}
                     </button>
                 </form>
             </div>

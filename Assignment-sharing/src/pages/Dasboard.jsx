@@ -11,15 +11,25 @@ import { useEffect } from 'react';
 
 const Dashboard = () => {
 
-     const { loggedIn} = useContext(AuthContext);
+    const { loggedIn,getSubjects} = useContext(AuthContext);
+
     
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [isPopupOpen, setPopupOpen] = useState(false);
+     useEffect(()=>{
+        async function init() {
+             await getSubjects();
+        }
+        init();
+     },[])
+
+  
 
     const navigate = useNavigate();
-    const { user, subjectsData, 
+    const { subjectsData, 
            setSubjectsData, setSelectedSubject 
     } = useContext(ThemeContext);
+   const {user,subjects,setSubjects} = useContext(AuthContext);
 
     const handleSubjectSelect = (subject) => {
         setSelectedSubject(subject);
@@ -27,9 +37,15 @@ const Dashboard = () => {
     };
 
     const handleAddSubject = (newSubjectData) => {
-        setSubjectsData(prev => [...prev, { ...newSubjectData, pendingTasks: 0, tasks: [] }]);
+        setSubjects(prev => [...prev, { ...newSubjectData, pendingTasks: 0, tasks: [] }]);
         setPopupOpen(false);
     };
+
+      useEffect(()=>{ 
+
+       
+
+    },[]) 
     return (
         <div className="dashboard-container">
             {isSidebarOpen && <Sidebar user={user} onClose={() => setSidebarOpen(false)} />}
@@ -50,11 +66,11 @@ const Dashboard = () => {
             </header>
 
             <main>
-                {subjectsData?.length > 0 ? (
+                {subjects.length>0 ? (
                     <SubjectList
-                        subjects={subjectsData}
+                        subjects={subjects}
                         onSelect={handleSubjectSelect}
-                        userRole={user.role}
+                        useruserType={user.userType}
                     />
                 ) : (
                     <div className="no-subjects-container">

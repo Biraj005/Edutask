@@ -1,13 +1,39 @@
 import assigntmentmodel from '../Model/assignment.model.js';
 import userModel from '../Model/user.mode.js';
 export const getAllTasks =async (req,res)=>{
-    res.send("All tasks");
+       const user = req.user;
+       const {subject} = req.body;
+       console.log(subject)
+
+       try {
+
+        if(!user || !user._id){
+            return res.json({success:false,message:"No valid credintails"});
+        }
+
+        if(!subject){
+            return res.json({scucess:false,message:"Subject code must be provided"});
+        }
+
+        const tasks = await assigntmentmodel.find({subject});
+
+        return res.json({success:true,tasks});
+
+        
+       } catch (error) {
+
+          res.json({success:false,message:"Error in server"});
+        
+       }
+
 }
 
 export const addTask =async (req,res)=>{
 
     const user = req.user;
     const {title,description,subject,deadline,attachments} = req.body;
+    console.log(title,description,subject,deadline,attachments);
+    //return res.send("Test");
 
     try {
 
@@ -22,6 +48,7 @@ export const addTask =async (req,res)=>{
         }
          
         const newTask = assigntmentmodel.create({
+            createdBy:user._id,
             title,
             description,
             subject,
@@ -29,22 +56,14 @@ export const addTask =async (req,res)=>{
             attachments:null,
         })
 
-       await userModel.updateMany(
-        { subjects: { $in: [subject] } }, // filter
-        { $push: {  } }       // update
-        );
-
-        
-
-
+       res.json({success:true,message:"Task added"});
 
     } catch (error) {
+
+        res.send("Error");
         
     }
-
-
     
-    res.send("Added task");
 }
 
 export const submitTask =async (req,res)=>{

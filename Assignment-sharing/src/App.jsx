@@ -15,7 +15,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Homepage />} />
+          <Route path="/" element={!loggedIn ?<Homepage />:<Navigate to='/home'/>} />
           <Route
             path="/login"
             element={loggedIn ? <Navigate to="/home" /> : <Loginpage />}

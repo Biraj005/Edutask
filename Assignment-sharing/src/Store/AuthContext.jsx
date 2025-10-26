@@ -8,7 +8,9 @@ const backendUrl = 'http://localhost:3000';
 const AuthContextProvider = ({ children }) => {
 
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
-
+    const [tasks,setTasks] = useState([]);
+    const [getTaskLoading,setGetTaskLoading] = useState(false);
+    const [addTaskLoading,setAddTaskLoading] = useState(false);
     const [addSubjectLoading,setAddSubjectLoading] = useState(false);
     const [students,setStudenst] = useState([]);
     const [subjects,setSubjects] =useState([]);
@@ -25,19 +27,14 @@ const AuthContextProvider = ({ children }) => {
 
     const signupHandle = async (Data) => {
         setSignupageLoading(true);
-        console.log(Data)
-        console.log("Event:", typeof (Data), Data);
-        console.log(backendUrl + 'api/signup')
         try {
             const result = await axios.post(`${backendUrl}/api/signup`, Data, {
                 withCredentials: true, 
                 headers: { "Content-Type": "application/json" }
             })
-            console.log("the result", result.data)
+          
             setSignupageLoading(false);
-            console.log(result.data);
-            console.log(result.data.message);
-
+           
             if (result.data.success) {
                 toast.success(result.data.message);
                 localStorage.setItem('user',JSON.stringify(result.data.user));
@@ -80,12 +77,12 @@ const AuthContextProvider = ({ children }) => {
             if (result.data.success) {
                 localStorage.setItem('user',JSON.stringify(result.data.user));
                 setUser(result.data.user);
-                console.log("✅ Backend success:", JSON.stringify(result.data.user));
+                console.log(" Backend success:", JSON.stringify(result.data.user));
                 setLoggedIn(true);
-                console.log("🟢 setLoggedIn(true) called");
+                console.log("setLoggedIn(true) called");
                 toast.success(result.data.message);
             } else {
-                console.log("❌ Backend failure:", result.data);
+                console.log(" Backend failure:", result.data);
                 toast.error(result.data.message);
             }
             setLoginPageLoading(false);
@@ -151,6 +148,7 @@ const AuthContextProvider = ({ children }) => {
                 setStudenst(result.data.users);
                 
              }else{
+                 console.log("Fuck you")
                  toast.error(error.message);
              }
         } catch (error) {
@@ -214,6 +212,58 @@ const AuthContextProvider = ({ children }) => {
             
          }
     }
+    const addTask = async (Data)=>{
+
+        setAddTaskLoading(true);
+
+        try {
+            const result =await axios.put(`${backendUrl}/api/task`,Data,{
+                withCredentials:true,
+                headers:{
+                    "Content-Type":"application/json"
+                }
+            })
+            if(result.data.success){
+                toast.success("Task added");
+        
+            }else{
+                toast.error("Task not added");
+            }
+            console.log(result.data);
+            
+        } catch (error) {
+            toast.error(error.message);
+        }
+        finally{
+            setAddSubjectLoading(false);
+        }
+
+
+    }
+    const getTasks = async (Data) => {
+        setGetTaskLoading(true);
+        try {
+            const result = await axios.post(`${backendUrl}/api/tasks`,Data,{
+                withCredentials:true,
+                headers:{
+                    "Content-Type":"application/json"
+                }
+            })
+            if(result.data.success){
+                 setTasks(result.data.tasks);
+            }else{
+                toast.error(result.data.message);
+            }
+            console.log(result.data.tasks[0])
+            
+        } catch (error) {
+            toast.error(error.message);
+        }
+        finally{
+            setGetTaskLoading(false);
+        }
+                  
+    }
     const contextValue = {
         
         setUser,
@@ -229,7 +279,8 @@ const AuthContextProvider = ({ children }) => {
         studenAddLoading,setStudentAddLoading,
         addStudent,loadingstudentList,
         students,getStudents,addSubjectLoading,addSubject,
-        removeStudent
+        removeStudent,addTaskLoading,setAddTaskLoading,addTask,
+        getTaskLoading,setGetTaskLoading,tasks,setTasks,getTasks
 
     };
 

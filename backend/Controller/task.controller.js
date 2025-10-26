@@ -1,16 +1,15 @@
 import assigntmentmodel from '../Model/assignment.model.js';
+import submissionmodel from '../Model/submisson.model.js';
 import userModel from '../Model/user.mode.js';
-export const getAllTasks =async (req,res)=>{
+export const getAllTasksForTeacher =async (req,res)=>{
        const user = req.user;
        const {subject} = req.body;
-       console.log(subject)
-
        try {
 
         if(!user || !user._id){
             return res.json({success:false,message:"No valid credintails"});
         }
-
+        
         if(!subject){
             return res.json({scucess:false,message:"Subject code must be provided"});
         }
@@ -27,7 +26,6 @@ export const getAllTasks =async (req,res)=>{
        }
 
 }
-
 export const addTask =async (req,res)=>{
 
     const user = req.user;
@@ -67,7 +65,46 @@ export const addTask =async (req,res)=>{
 }
 
 export const submitTask =async (req,res)=>{
-    res.send("Submitted task");
+    const {user} = req.user;
+    const {assignmentId} = req.body;
+
+
+    try {
+
+        let file_link = null;
+        /*  *file work  */
+        if(!assignmentId){
+            return res.json({success:true,message:"Assigment id should be given"});
+        }
+        if(!user || !user._id){
+            return res.json({success:false,message:"Invalid credintals"});
+        }
+        const get_student = await userModel.findById(user._id);
+        if(!get_student || get_student.userType==='teacher'){
+            return res.json({success:false,message:"User must be a student"});
+        }
+        const get_assignment = await assigntmentmodel.findById(assignmentId);
+
+        if(!get_assignment){
+            return res.json({success:false,message:"No valid assignment "});
+        }
+        if(get_assignment.deadline <Date.now()){
+            return res.json({success:false,message:"Already late for submission"});
+        }
+        const new_submission = submissionmodel.create({
+            assignment:assignmentId,
+            student:user._id,
+            fileUrl:file_link,
+            submittedAt:Date.now(),
+            status:"submitted",
+        })
+        
+        return res.json({sucess:true,message:"Assignment submitted"});
+        
+    } catch (error) {
+        res.json({success:false,message:"Error in server"});
+        
+    }
 }
 
 export const getSingleTask =async (req,res)=>{

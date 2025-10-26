@@ -7,21 +7,23 @@ import FindStudent from '../FindStudent/FindStudent';
 import './SubjectCard.css';
 import { AuthContext } from '../../Store/AuthContext';
 
+
 const SubjectCard = () => {
     const navigate = useNavigate();
     const {  selectedSubject, setSelectedSubject, subjectsData, setSubjectsData } = useContext(ThemeContext);
 
         
-    const {user,addStudent,removeStudent}  = useContext(AuthContext)
+    const {user,addStudent,removeStudent,addTask,
+        tasks,getTaskLoading,getTasks
+    }  = useContext(AuthContext)
+
     const [isAddTaskOpen, setAddTaskOpen] = useState(false);
     const [isStudentListOpen, setStudentListOpen] = useState(false);
     const [isAddStudentOpen, setAddStudentOpen] = useState(false);
     const [studentSearchResults, setStudentSearchResults] = useState(null);
 
     useEffect(() => {
-        console.log(user.role)
-        console.log(selectedSubject)
-        console.log("user is " + JSON.stringify(selectedSubject, null, 2));
+       
         if (!selectedSubject) {
             navigate("/home");
         }
@@ -39,8 +41,11 @@ const SubjectCard = () => {
     const handleAddTaskSubmit = (taskData) => {
         console.log('New Task Added:', taskData);
         setAddTaskOpen(false);
-       // addStudent(taskData);
-      // console.log(d)
+        
+       //title,description,subject,deadline,attachments
+       taskData.subject = selectedSubject._id;
+       addTask(taskData);
+
         
     };
 
@@ -51,20 +56,6 @@ const SubjectCard = () => {
             studentId:studentToRemove._id,
              subjectId:selectedSubject._id,
         }
-        // if (window.confirm(`Are you sure you want to remove ${studentToRemove}?`)) {
-        //     const updatedSubjectsData = subjectsData.map(subject => {
-        //         if (subject.code === selectedSubject.code) {
-        //             const updatedStudents = subject.students.filter(s => s !== studentToRemove);
-        //             return { ...subject, students: updatedStudents };
-        //         }
-        //         return subject;
-        //     });
-
-        //     setSubjectsData(updatedSubjectsData);
-
-        //     const updatedSelectedSubject = updatedSubjectsData.find(s => s.code === selectedSubject.code);
-        //     setSelectedSubject(updatedSelectedSubject);
-        // }
         removeStudent(data);
         
     };
@@ -74,16 +65,12 @@ const SubjectCard = () => {
     };
     
     const handleAddStudent = (student) => {
-
-       console.log("Adding student:", student);
-       console.log("Full student object:", JSON.stringify(student, null, 2));
        const updatedStudent = {
         ...student,code:selectedSubject.code
        }
         addStudent(updatedStudent);
 
         setStudentSearchResults(null);
-        console.log(selectedSubject);
         setAddStudentOpen(false);
     };
 
@@ -93,17 +80,17 @@ const SubjectCard = () => {
     };
     const StudentView = () => (
         <div className="tasks-section">
-            <h4>All Tasks ({selectedSubject.tasks.length})</h4>
-            {selectedSubject.tasks.length > 0 ? (
+            <h4>All Tasks ({tasks.length})</h4>
+            {tasks.length > 0 ? (
                 <ul className="task-list">
-                    {selectedSubject.tasks.map(task => (
+                    {tasks.map(task => (
                         <li key={task.id} className="task-item">
                             <span>{task.title}</span>
                             <span className={`status-pill ${task.status.toLowerCase()}`}>{task.status}</span>
                         </li>
                     ))}
                 </ul>
-            ) : <p className="no-tasks-msg">No tasks available.</p>}
+            ) : <p className="no-tasks-msg">{getTaskLoading ?"Getting tasks":"No tasks available."}</p>}
         </div>
     );
 
@@ -119,19 +106,27 @@ const SubjectCard = () => {
             </div>
             <div className="tasks-section">
                 <h4>All Assigned Tasks ({selectedSubject.tasks.length})</h4>
-                {selectedSubject.tasks.length > 0 ? (
+                {tasks.length > 0 ? (
                     <ul className="task-list">
-                        {selectedSubject.tasks.map(task => (
-                            <li key={task.id} className={`task-item ${task.status.toLowerCase()}`}>
+                        {tasks.map(task => (           //change here later
+                            <li key={task._id} className={`task-item pending`}>
                                 <span>{task.title}</span>
-                                <span className={`status-pill ${task.status.toLowerCase()}`}>{task.status}</span>
+                                <span className={`status-pill ${task.status}`}>{task.status}</span>
                             </li>
                         ))}
                     </ul>
-                ) : <p className="no-tasks-msg">No tasks assigned for this subject yet.</p>}
+                ) : <p className="no-tasks-msg">{getTaskLoading ?"Getting tasks":"No tasks available."}</p>}
             </div>
         </>
     );
+
+    useEffect(()=>{
+        getTasks({subject:selectedSubject._id});
+        
+    },[])
+    useEffect(()=>{
+        console.log(tasks)
+    },[tasks])
     return (
         <>
             {isAddTaskOpen && (

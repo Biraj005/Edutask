@@ -3,6 +3,7 @@ import './AddTaskPopup.css';
 
 const AddTaskPopup = ({ onClose, onSubmit }) => {
     const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
     const [dueDate, setDueDate] = useState('');
     const [file, setFile] = useState(null);
 
@@ -11,6 +12,7 @@ const AddTaskPopup = ({ onClose, onSubmit }) => {
             setFile(e.target.files[0]);
         }
     };
+
     const handleRemoveFile = () => {
         setFile(null);
     };
@@ -21,7 +23,12 @@ const AddTaskPopup = ({ onClose, onSubmit }) => {
             alert('Please provide a task title and a due date.');
             return;
         }
-        onSubmit({ title, dueDate, file });
+        onSubmit({
+            title,
+            description,
+            deadline: dueDate, 
+            file
+        });
     };
 
     return (
@@ -31,6 +38,7 @@ const AddTaskPopup = ({ onClose, onSubmit }) => {
                     <h2>Add New Task</h2>
                     <button className="close-btn" onClick={onClose}>&times;</button>
                 </div>
+
                 <form className="add-task-form" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="title">Task Title</label>
@@ -43,6 +51,17 @@ const AddTaskPopup = ({ onClose, onSubmit }) => {
                             placeholder="e.g., Final Lab Report"
                             required
                         />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="description">Description</label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Add more details about the task..."
+                            rows="3"
+                        ></textarea>
                     </div>
                     <div className="form-group">
                         <label htmlFor="dueDate">Due Date</label>
@@ -63,15 +82,15 @@ const AddTaskPopup = ({ onClose, onSubmit }) => {
                                 id="file"
                                 name="file"
                                 onChange={handleFileChange}
-                                value="" 
+                                value=""
                             />
                             <label htmlFor="file" className="file-input-label">
                                 {file ? (
                                     <div className="file-display">
                                         <span className="file-name" title={file.name}>{file.name}</span>
-                                        <button 
-                                            type="button" 
-                                            className="remove-file-btn" 
+                                        <button
+                                            type="button"
+                                            className="remove-file-btn"
                                             onClick={handleRemoveFile}
                                         >
                                             &times;

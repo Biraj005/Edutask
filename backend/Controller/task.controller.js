@@ -1,114 +1,183 @@
-import assigntmentmodel from '../Model/assignment.model.js';
-import submissionmodel from '../Model/submisson.model.js';
-import userModel from '../Model/user.mode.js';
-export const getAllTasksForTeacher =async (req,res)=>{
-       const user = req.user;
-       const {subject} = req.body;
-       try {
+import assigntmentmodel from "../Model/assignment.model.js";
+import submissionmodel from "../Model/submisson.model.js";
+import userModel from "../Model/user.mode.js";
+import { uploadToCloudinary } from "../util/cloudnary.js";
+export const getAllTasksForTeacher = async (req, res) => {
+  const user = req.user;
+  const { subject } = req.body;
+  try {
+    if (!user || !user._id) {
+      return res.json({ success: false, message: "No valid credintails" });
+    }
 
-        if(!user || !user._id){
-            return res.json({success:false,message:"No valid credintails"});
-        }
-        
-        if(!subject){
-            return res.json({scucess:false,message:"Subject code must be provided"});
-        }
+    if (!subject) {
+      return res.json({
+        scucess: false,
+        message: "Subject code must be provided",
+      });
+    }
 
-        const tasks = await assigntmentmodel.find({subject});
+    const tasks = await assigntmentmodel.find({ subject });
 
-        return res.json({success:true,tasks});
+    return res.json({ success: true, tasks });
+  } catch (error) {
+    res.json({ success: false, message: "Error in server" });
+  }
+};
+export const addTask = async (req, res) => {
+  const user = req.user;
+  const { title, description, subject, deadline } = req.body;
+  // console.log(title,description,subject,deadline,attachments);
+  //return res.send("Test");
+  if (req.fileValidationError) {
+    return res.json({ success: false, message: req.fileValidationError });
+  }
+  const file = req.file;
+  console.log(title,subject,description,deadline)
+  console.log('file',file);
+  try {
+    if (!user || !user._id) {
+      return res.json({ success: false, message: "User must be a teacher" });
+    }
 
-        
-       } catch (error) {
+    const get_teacher = await userModel.findById(user._id);
 
-          res.json({success:false,message:"Error in server"});
-        
-       }
+    if (!get_teacher || get_teacher.userType !== "teacher") {
+      return res.json({ success: false, message: "User must be a teacher" });
+    }
 
-}
-export const addTask =async (req,res)=>{
+    let attachmentUrl = null;
 
-    const user = req.user;
-    const {title,description,subject,deadline,attachments} = req.body;
-    console.log(title,description,subject,deadline,attachments);
-    //return res.send("Test");
+  
+    if (file) {
+  
+      const fileBuffer = file.buffer; 
+      
 
-    try {
-
-        if(!user || !user._id){
-            return res.json({success:false,message:"User must be a teacher"});
-        }
-
-        const get_teacher = await userModel.findById(user._id);
-
-        if(!get_teacher || get_teacher.userType!=='teacher'){
-             return res.json({success:false,message:"User must be a teacher"});
-        }
-         
-        const newTask = assigntmentmodel.create({
-            createdBy:user._id,
-            title,
-            description,
-            subject,
-            deadline,
-            attachments:null,
-        })
-
-       res.json({success:true,message:"Task added"});
-
-    } catch (error) {
-
-        res.send("Error");
-        
+      const uploadResult = await uploadToCloudinary(fileBuffer, "task_attachments");
+    
+      attachmentUrl = uploadResult.secure_url;
     }
     
+
+    const newTask = await assigntmentmodel.create({
+      createdBy: user._id,
+      title,
+      description,
+      subject,
+      deadline,
+      attachments: attachmentUrl,
+    });
+    console.log("Here is you task",newTask);
+
+    res.json({ success: true, message: "Task added", newTask });
+  }catch (error) {
+    
+    
+    res.json({ 
+        success: false, 
+        message: "Server Error", 
+        error: error.message 
+    });
 }
+};
 
-export const submitTask =async (req,res)=>{
-    const {user} = req.user;
-    const {assignmentId} = req.body;
+export const submitTask = async (req, res) => {
+  const { user } = req.user;
+  const { assignmentId } = req.body;
 
-
-    try {
-
-        let file_link = null;
-        /*  *file work  */
-        if(!assignmentId){
-            return res.json({success:true,message:"Assigment id should be given"});
-        }
-        if(!user || !user._id){
-            return res.json({success:false,message:"Invalid credintals"});
-        }
-        const get_student = await userModel.findById(user._id);
-        if(!get_student || get_student.userType==='teacher'){
-            return res.json({success:false,message:"User must be a student"});
-        }
-        const get_assignment = await assigntmentmodel.findById(assignmentId);
-
-        if(!get_assignment){
-            return res.json({success:false,message:"No valid assignment "});
-        }
-        if(get_assignment.deadline <Date.now()){
-            return res.json({success:false,message:"Already late for submission"});
-        }
-        const new_submission = submissionmodel.create({
-            assignment:assignmentId,
-            student:user._id,
-            fileUrl:file_link,
-            submittedAt:Date.now(),
-            status:"submitted",
-        })
-        
-        return res.json({sucess:true,message:"Assignment submitted"});
-        
-    } catch (error) {
-        res.json({success:false,message:"Error in server"});
-        
+  try {
+    let file_link = null;
+    /*  *file work  */
+    if (!assignmentId) {
+      return res.json({
+        success: true,
+        message: "Assigment id should be given",
+      });
     }
-}
+    if (!user || !user._id) {
+      return res.json({ success: false, message: "Invalid credintals" });
+    }
+    const get_student = await userModel.findById(user._id);
+    if (!get_student || get_student.userType === "teacher") {
+      return res.json({ success: false, message: "User must be a student" });
+    }
+    const get_assignment = await assigntmentmodel.findById(assignmentId);
 
-export const getSingleTask =async (req,res)=>{
-    const {userId,taskId} = req.params;
-    console.log(userId)
-    res.send(`Here is your task ${userId} ${taskId}`);
-}
+    if (!get_assignment) {
+      return res.json({ success: false, message: "No valid assignment " });
+    }
+    if (get_assignment.deadline < Date.now()) {
+      return res.json({
+        success: false,
+        message: "Already late for submission",
+      });
+    }
+    const new_submission = await submissionmodel.create({
+      assignment: assignmentId,
+      student: user._id,
+      fileUrl: file_link,
+      submittedAt: Date.now(),
+      status: "submitted",
+    });
+
+    return res.json({ sucess: true, message: "Assignment submitted" });
+  } catch (error) {
+    res.json({ success: false, message: "Error in server" });
+  }
+};
+
+export const removeTask = async (req, res) => {
+  const user = req.user;
+  const { taskId } = req.body;
+  console.log(taskId);
+
+  if (!user || !user._id) {
+ 
+    return res.json({ success: false, message: "No user details provide" });
+  }
+  if (!taskId) {
+
+    return res.json({ success: false, message: "No task provided" });
+  }
+  try {
+    const get_teacher = await userModel.findById(user._id);
+    console.log(get_teacher);
+
+    if (!get_teacher) {
+      return res.json({ success: false, message: "Invalid credintials" });
+    }
+    console.log("1");
+    const get_task = await assigntmentmodel.findById(taskId);
+
+    if (!get_task) {
+      return res.json({ success: false, message: "Task not found." });
+    }
+    if (get_task.createdBy.toString() !== get_teacher._id.toString()) {
+      return res.json({ success: false, message: "Invalid credintials" });
+    }
+
+    await assigntmentmodel.findByIdAndDelete(taskId);
+
+    res.json({ success: true, message: "Task removed" });
+  } catch (error) {
+    res.json({ success: false, message: "Error in server" });
+    console.error(error.message);
+  }
+};
+export const getSingleTask = async (req, res) => {
+  const { userId, taskId } = req.params;
+  console.log(userId);
+  res.send(`Here is your task ${userId} ${taskId}`);
+};
+
+export const getUser = async (req, res) => {
+  const { _id } = req.body;
+
+  try {
+    const user = await userModel.findById(_id);
+    return res.send(user);
+  } catch (error) {
+    res.send(error);
+  }
+};

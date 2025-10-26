@@ -2,7 +2,7 @@ import SubjectModel from "../Model/Subject.model.js";
 import userModel from "../Model/user.mode.js";
 
 export const getAllsubjects = async (req, res) => {
-  console.log(req.user);
+  //console.log(req.user);
 
   const user = req.user;
   try {

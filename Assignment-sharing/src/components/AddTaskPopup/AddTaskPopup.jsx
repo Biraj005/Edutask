@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import './AddTaskPopup.css';
+import { useContext } from 'react';
+import { AuthContext } from '../../Store/AuthContext';
+import { ThemeContext } from '../../Store/ThemeContext';
 
 const AddTaskPopup = ({ onClose, onSubmit }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [dueDate, setDueDate] = useState('');
     const [file, setFile] = useState(null);
+    const { taskFormLoading} =  useContext(AuthContext);
+  
 
     const handleFileChange = (e) => {
         if (e.target.files.length > 0) {
@@ -23,6 +28,10 @@ const AddTaskPopup = ({ onClose, onSubmit }) => {
             alert('Please provide a task title and a due date.');
             return;
         }
+        // addTask({
+        //     title,description,deadline: dueDate,
+        //     subject: sele
+        // })
         onSubmit({
             title,
             description,
@@ -103,7 +112,7 @@ const AddTaskPopup = ({ onClose, onSubmit }) => {
                         </div>
                     </div>
                     <button type="submit" className="create-task-btn">
-                        Add Task
+                        { taskFormLoading ? "Submitting..":"Add task"}
                     </button>
                 </form>
             </div>

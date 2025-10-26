@@ -13,11 +13,11 @@ const SubjectCard = () => {
     const {  selectedSubject, setSelectedSubject, subjectsData, setSubjectsData } = useContext(ThemeContext);
 
         
-    const {user,addStudent,removeStudent,addTask,
-        tasks,getTaskLoading,getTasks
+    const {user,addStudent,removeStudent,addTask, removeTask,
+        tasks,getTaskLoading,getTasks,isAddTaskOpen, setAddTaskOpen,
+        taskFormLoading
     }  = useContext(AuthContext)
 
-    const [isAddTaskOpen, setAddTaskOpen] = useState(false);
     const [isStudentListOpen, setStudentListOpen] = useState(false);
     const [isAddStudentOpen, setAddStudentOpen] = useState(false);
     const [studentSearchResults, setStudentSearchResults] = useState(null);
@@ -40,9 +40,8 @@ const SubjectCard = () => {
 
     const handleAddTaskSubmit = (taskData) => {
         console.log('New Task Added:', taskData);
-        setAddTaskOpen(false);
-        
-       //title,description,subject,deadline,attachments
+    
+      //title,description,subject,deadline,attachments
        taskData.subject = selectedSubject._id;
        addTask(taskData);
 
@@ -59,6 +58,10 @@ const SubjectCard = () => {
         removeStudent(data);
         
     };
+    const handleRemoveTask = (data)=>{
+
+        removeTask(data);
+    }
 
     const handleStudentSearch = (query) => {
         console.log("Searching for:", query);
@@ -84,9 +87,17 @@ const SubjectCard = () => {
             {tasks.length > 0 ? (
                 <ul className="task-list">
                     {tasks.map(task => (
-                        <li key={task.id} className="task-item">
-                            <span>{task.title}</span>
-                            <span className={`status-pill ${task.status.toLowerCase()}`}>{task.status}</span>
+                        <li key={task._id} className="task-item">
+                            <span className="task-title-span">{task.title}</span>
+                            <div className="task-item-controls">
+                                <span className={`status-pill ${task.status}`}>{task.status}</span>
+                                <button 
+                                    className="action-btn view-task-btn" 
+                                    onClick={() => handleTaskClick(task._id)}
+                                >
+                                    View
+                                </button>
+                            </div>
                         </li>
                     ))}
                 </ul>
@@ -105,13 +116,27 @@ const SubjectCard = () => {
                 </button>
             </div>
             <div className="tasks-section">
-                <h4>All Assigned Tasks ({selectedSubject.tasks.length})</h4>
+                <h4>All Assigned Tasks ({tasks.length})</h4>
                 {tasks.length > 0 ? (
                     <ul className="task-list">
-                        {tasks.map(task => (           //change here later
-                            <li key={task._id} className={`task-item pending`}>
-                                <span>{task.title}</span>
-                                <span className={`status-pill ${task.status}`}>{task.status}</span>
+                        {tasks.map(task => (           
+                            <li key={task._id} className="task-item">
+                                <span className="task-title-span">{task.title}</span>
+                                <div className="task-item-controls">
+                                    <span className={`status-pill ${task.status}`}>{task.status}</span>
+                                    <button 
+                                        className="action-btn view-task-btn" 
+                                        onClick={() => handleTaskClick(task._id)}
+                                    >
+                                        View
+                                    </button>
+                                    <button 
+                                        className="action-btn remove-task-btn" 
+                                        onClick={() => handleRemoveTask(task._id)}
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
                             </li>
                         ))}
                     </ul>
@@ -119,7 +144,6 @@ const SubjectCard = () => {
             </div>
         </>
     );
-
     useEffect(()=>{
         getTasks({subject:selectedSubject._id});
         

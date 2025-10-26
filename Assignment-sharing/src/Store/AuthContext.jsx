@@ -6,9 +6,12 @@ export const AuthContext = createContext(null);
 
 const backendUrl = 'http://localhost:3000';
 const AuthContextProvider = ({ children }) => {
-
+   
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
+    const [getSubjectLoading,setGetSubjectsLoading] = useState(false);
     const [tasks,setTasks] = useState([]);
+    const [taskFormLoading,settaskFormLoading] = useState(false);
+    const [isAddTaskOpen, setAddTaskOpen] = useState(false);
     const [getTaskLoading,setGetTaskLoading] = useState(false);
     const [addTaskLoading,setAddTaskLoading] = useState(false);
     const [addSubjectLoading,setAddSubjectLoading] = useState(false);
@@ -91,16 +94,20 @@ const AuthContextProvider = ({ children }) => {
         }
     }
     const getSubjects = async ()=>{
+        setGetSubjectsLoading(true);
         try {
             const result = await axios.get('http://localhost:3000/api/subjects',{
                 withCredentials:true,
                 headers:{"Content-Type":"application/json"}
             })
-            console.log(result.data.subjects);
+          //  console.log(result.data.subjects);
             setSubjects(result.data.subjects);            
         } catch (error) {
             toast.error('Error');
             console.log('Error while getting subjects');
+        }
+        finally{
+            setGetSubjectsLoading(false);
         }
     }
     const addStudent = async (data)=>{
@@ -113,7 +120,7 @@ const AuthContextProvider = ({ children }) => {
                     "Content-Type":"application/json"
                 }
             })
-           console.log(result)
+         //  console.log(result)
 
             if(result.data.success){
                 toast.success("Student added");
@@ -132,7 +139,7 @@ const AuthContextProvider = ({ children }) => {
         
     }
     const getStudents = async (code) => {
-        console.log(code);
+       // console.log(code);
         setLoadingStudentList(true);
         try {
              const result = await axios.get(`${backendUrl}/api/user/${code}`,{
@@ -144,7 +151,7 @@ const AuthContextProvider = ({ children }) => {
              console.log(result);
 
              if(result.data.success){
-                console.log(result.data.users)
+               // console.log(result.data.users)
                 setStudenst(result.data.users);
                 
              }else{
@@ -186,6 +193,7 @@ const AuthContextProvider = ({ children }) => {
     }
     const removeStudent = async (data)=>{
          console.log(data);
+       
          try {
 
             const result = await axios.delete(`${backendUrl}/api/student`, {
@@ -213,21 +221,41 @@ const AuthContextProvider = ({ children }) => {
          }
     }
     const addTask = async (Data)=>{
+           //{title: 'giii', description: 'giii', deadline: '2025-10-18', file: File}
+        settaskFormLoading(true)
 
+        const formData = new FormData();
+         formData.append('title', Data.title);
+         formData.append('description', Data.description);
+         formData.append('deadline', Data.deadline);
+         formData.append('subject',Data.subject); 
+         
+
+         console.log(Data);
+         
+    
+        if (Data.file) {
+           console.log(Data.file)
+            formData.append('attachment', Data.file); 
+        }
         setAddTaskLoading(true);
+    
 
         try {
-            const result =await axios.put(`${backendUrl}/api/task`,Data,{
+            const result =await axios.put(`${backendUrl}/api/teacher/task`,formData,{
                 withCredentials:true,
-                headers:{
-                    "Content-Type":"application/json"
-                }
             })
             if(result.data.success){
+             
+                setTasks(prevTasks => [...prevTasks, result.data.newTask]);
+                //console.log(tasks)
+                console.log(result.data.newTask);
                 toast.success("Task added");
+                
         
             }else{
-                toast.error("Task not added");
+                
+                toast.error(result.data.message);
             }
             console.log(result.data);
             
@@ -235,15 +263,19 @@ const AuthContextProvider = ({ children }) => {
             toast.error(error.message);
         }
         finally{
-            setAddSubjectLoading(false);
+            setAddTaskLoading(false);
+            setAddTaskOpen(false);
+            settaskFormLoading(false);
         }
 
-
+  
     }
     const getTasks = async (Data) => {
         setGetTaskLoading(true);
+        
+
         try {
-            const result = await axios.post(`${backendUrl}/api/tasks`,Data,{
+            const result = await axios.post(`${backendUrl}/api/${user && user.role==='teacher' ? "teacher":"student"}/tasks`,Data,{
                 withCredentials:true,
                 headers:{
                     "Content-Type":"application/json"
@@ -254,7 +286,7 @@ const AuthContextProvider = ({ children }) => {
             }else{
                 toast.error(result.data.message);
             }
-            console.log(result.data.tasks[0])
+            console.log(result.data)
             
         } catch (error) {
             toast.error(error.message);
@@ -262,7 +294,38 @@ const AuthContextProvider = ({ children }) => {
         finally{
             setGetTaskLoading(false);
         }
-                  
+             
+        
+    }
+    const removeTask = async (data)=>{
+        console.log(data)
+        // data = {
+        //     taskId:data;
+        // }
+        // return;
+        try {
+            const result = await axios.delete(`${backendUrl}/api/teacher/task`,{
+                data:{
+                    taskId:data
+                },
+                withCredentials:true,
+                headers:{
+                    "Content-Type":"application/json"
+                }
+            })
+            if(result.data.success){
+                setTasks(prevTasks => 
+                    prevTasks.filter(task => task._id !== data)
+                );
+                toast.success("Task removed");
+            }else{
+                toast.error(result.data.message);
+            }
+        } catch (error) {
+
+            toast.error(error.message);
+            
+        }
     }
     const contextValue = {
         
@@ -280,7 +343,9 @@ const AuthContextProvider = ({ children }) => {
         addStudent,loadingstudentList,
         students,getStudents,addSubjectLoading,addSubject,
         removeStudent,addTaskLoading,setAddTaskLoading,addTask,
-        getTaskLoading,setGetTaskLoading,tasks,setTasks,getTasks
+        getTaskLoading,setGetTaskLoading,tasks,setTasks,getTasks,
+        getSubjectLoading,setGetSubjectsLoading,removeTask,isAddTaskOpen, setAddTaskOpen,
+        taskFormLoading,settaskFormLoading
 
     };
 

@@ -1,9 +1,12 @@
 
 import React from 'react';
 import './SubjectList.css';
+import { useContext } from 'react';
+import { AuthContext } from '../../Store/AuthContext';
 
 
 const SubjectList = ({ subjects, onSelect }) => {
+  const {getSubjectLoading,setGetSubjectsLoading} = useContext(AuthContext);
   return (
     <div className="subject-list-container">
       <div className="subject-list">

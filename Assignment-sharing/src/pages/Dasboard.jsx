@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SubjectList from '../components/SubjectList/Subjectlist';
+import SubjectList from '../components/SubjectList/SubjectList';
 import Sidebar from '../components/Sidbar/Sidebar';
 import AddSubjectPopup from '../components/Addsubject/AddSubjectPopup';
 import './Dashboard.css';
@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 
 const Dashboard = () => {
 
-    const { loggedIn,getSubjects} = useContext(AuthContext);
+    const { loggedIn,getSubjects,getSubjectLoading,setGetSubjectsLoading} = useContext(AuthContext);
 
     
     const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -74,7 +74,7 @@ const Dashboard = () => {
                     />
                 ) : (
                     <div className="no-subjects-container">
-                        <p>No subject is allocated yet.</p>
+                        <p>{getSubjectLoading ?"Subjects Loading... ":"No subject is allocated yet."}</p>
                     </div>
                 )}
             </main>

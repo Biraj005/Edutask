@@ -1,0 +1,50 @@
+.file-viewer-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.file-viewer-popup-content {
+  position: relative;
+  width: 90%;
+  height: 90%;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-viewer-content {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.file-viewer-content.image {
+  object-fit: contain;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #333;
+}
+
+.unsupported-file {
+  padding: 20px;
+  text-align: center;
+}

@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import './AddSubjectPopup.css';
 import { AuthContext } from '../../Store/AuthContext';
 
-const AddSubjectPopup = ({ onClose, onSubmit }) => {
+const AddSubjectPopup = ({  onSubmit }) => {
 
     const {addSubjectLoading,addSubject} =useContext(AuthContext);
     const [formData, setFormData] = useState({
@@ -31,11 +31,11 @@ const AddSubjectPopup = ({ onClose, onSubmit }) => {
     };
 
     return (
-        <div className="popup-overlay" onClick={onClose}>
+        <div className="popup-overlay" >
             <div className="popup-content" onClick={(e) => e.stopPropagation()}>
                 <div className="popup-header">
                     <h2>Add New Subject</h2>
-                    <button className="close-btn" onClick={onClose}>&times;</button>
+                    <button className="close-btn" >&times;</button>
                 </div>
                 <form className="add-subject-form" onSubmit={handleSubmit}>
                     <div className="form-group">

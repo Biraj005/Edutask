@@ -9,7 +9,10 @@ const AuthContextProvider = ({ children }) => {
    
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
     const [getSubjectLoading,setGetSubjectsLoading] = useState(false);
+    const [isPopupOpen, setPopupOpen] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [tasks,setTasks] = useState([]);
+    const [isSubmitPopupOpen, setSubmitPopupOpen] = useState(false);
     const [taskFormLoading,settaskFormLoading] = useState(false);
     const [isAddTaskOpen, setAddTaskOpen] = useState(false);
     const [getTaskLoading,setGetTaskLoading] = useState(false);
@@ -127,6 +130,7 @@ const AuthContextProvider = ({ children }) => {
             }else{
                 toast.error(result.data.message);
             }
+
         } catch (error) {
             toast.error(error.message);
           
@@ -135,6 +139,7 @@ const AuthContextProvider = ({ children }) => {
         }
         finally{
             setStudentAddLoading(false);
+            
         }
         
     }
@@ -148,14 +153,15 @@ const AuthContextProvider = ({ children }) => {
                     "Content-Type":"application/json"
                 }
              });
-             console.log(result);
+             console.log(result.data.users);
+              console.log("Fuck you")
 
              if(result.data.success){
-               // console.log(result.data.users)
+               
                 setStudenst(result.data.users);
                 
              }else{
-                 console.log("Fuck you")
+                
                  toast.error(error.message);
              }
         } catch (error) {
@@ -180,6 +186,8 @@ const AuthContextProvider = ({ children }) => {
             if(result.data.success){
                 toast.success("Subject added Successfully");
                 console.log(result.data)
+            }else{
+                toast.error(result.data.message)
             }
             
         } catch (error) {
@@ -188,7 +196,9 @@ const AuthContextProvider = ({ children }) => {
             
         }
         finally{
+            setPopupOpen(false);
             setAddSubjectLoading(false);
+            
         }
     }
     const removeStudent = async (data)=>{
@@ -222,9 +232,9 @@ const AuthContextProvider = ({ children }) => {
     }
     const addTask = async (Data)=>{
            //{title: 'giii', description: 'giii', deadline: '2025-10-18', file: File}
-        settaskFormLoading(true)
+         settaskFormLoading(true)
 
-        const formData = new FormData();
+         const formData = new FormData();
          formData.append('title', Data.title);
          formData.append('description', Data.description);
          formData.append('deadline', Data.deadline);
@@ -272,6 +282,8 @@ const AuthContextProvider = ({ children }) => {
     }
     const getTasks = async (Data) => {
         setGetTaskLoading(true);
+        const url = `${backendUrl}/api/${user && user.role==='teacher' ? "teacher":"student"}/tasks`;
+        console.log(url)
         
 
         try {
@@ -327,6 +339,41 @@ const AuthContextProvider = ({ children }) => {
             
         }
     }
+    const submitTask = async (Data)=>{
+        console.log(Data.get("taskId"));
+        setIsSubmitting(true);
+        // formData.append("taskId", task._id);
+    // if (file) formData.append("file", file);
+    // if (text.trim()) formData.append("text", text);
+        
+        try {
+            const result = await axios.put(`${backendUrl}/api/submit`,Data,{
+                withCredentials:true,
+            })
+
+            if(result.data.success){
+             setTasks(prev =>
+                    prev.map(task =>
+                        task._id !== Data.get("taskId")
+                        ? task
+                        : { ...task, status: "complete" }
+                    )
+                    );
+
+              toast.success("Task submitted");
+            }else{
+                toast.error(result.data.message);
+            }
+            
+        } catch (error) {
+            toast.error(error.message);
+            
+        }
+        finally{
+           setSubmitPopupOpen(false);
+           setIsSubmitting(false);
+        }
+    }
     const contextValue = {
         
         setUser,
@@ -345,7 +392,8 @@ const AuthContextProvider = ({ children }) => {
         removeStudent,addTaskLoading,setAddTaskLoading,addTask,
         getTaskLoading,setGetTaskLoading,tasks,setTasks,getTasks,
         getSubjectLoading,setGetSubjectsLoading,removeTask,isAddTaskOpen, setAddTaskOpen,
-        taskFormLoading,settaskFormLoading
+        taskFormLoading,settaskFormLoading,isSubmitPopupOpen, setSubmitPopupOpen,submitTask,
+        isSubmitting, setIsSubmitting,isPopupOpen, setPopupOpen
 
     };
 

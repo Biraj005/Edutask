@@ -11,6 +11,7 @@ const StudentList = ({  onRemove, onClose }) => {
     const {students,loadingstudentList, getSubjects,getStudents} = useContext(AuthContext);
     useEffect(()=>{
         getStudents(selectedSubject.code);
+        console.log(students)
     },[])   
     return (
         <div className="student-list-container">
@@ -39,7 +40,7 @@ const StudentList = ({  onRemove, onClose }) => {
                     ))}
                 </ul>
             ) : (
-                <p className="no-students-msg">{loadingstudentList ?"No students are currently enrolled in this subject.":"Loading...."}</p>
+                <p className="no-students-msg">{!loadingstudentList ?"No students are currently enrolled in this subject.":"Loading...."}</p>
             )}
         </div>
     );

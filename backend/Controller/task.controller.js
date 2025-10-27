@@ -24,6 +24,59 @@ export const getAllTasksForTeacher = async (req, res) => {
     res.json({ success: false, message: "Error in server" });
   }
 };
+export const getAllTasksForStudent = async (req, res) => {
+  const user = req.user;
+  const { subject } = req.body;
+  try {
+    if (!user || !user._id) {
+      return res.json({ success: false, message: "No valid credintails" });
+    }
+
+    if (!subject) {
+      return res.json({
+        scucess: false,
+        message: "Subject code must be provided",
+      });
+    }
+
+   const now = new Date();
+
+const tasks = await assigntmentmodel
+  .find({ subject })
+  .lean()
+  .select("-createdBy");
+
+const submissions = await submissionmodel
+  .find({ student: user._id })
+  .lean();
+
+const submittedIds = new Set(submissions.map(s => s.assignment.toString()));
+
+const taskList = tasks.map(task => {
+  const deadlinePassed = task.deadline && new Date(task.deadline) < now;
+
+  let status = "pending";
+  if (submittedIds.has(task._id.toString())) {
+    status = "complete";
+  } else if (deadlinePassed) {
+    status = "expired";
+  }
+
+  return {
+    _id: task._id,
+    title: task.title,
+    description: task.description,
+    deadline: task.deadline,
+    status,
+    attachments:task.attachments
+  };
+});
+
+    return res.json({ success: true, tasks:taskList});
+  } catch (error) {
+    res.json({ success: false, message: "Error in server" });
+  }
+};
 export const addTask = async (req, res) => {
   const user = req.user;
   const { title, description, subject, deadline } = req.body;
@@ -49,13 +102,10 @@ export const addTask = async (req, res) => {
     let attachmentUrl = null;
 
   
-    if (file) {
-  
-      const fileBuffer = file.buffer; 
-      
-
-      const uploadResult = await uploadToCloudinary(fileBuffer, "task_attachments");
-    
+     if (file) {
+      const fileBuffer = file.buffer;
+      const mimetype = file.mimetype; 
+      const uploadResult = await uploadToCloudinary(fileBuffer, "task_attachments", mimetype);
       attachmentUrl = uploadResult.secure_url;
     }
     
@@ -83,26 +133,33 @@ export const addTask = async (req, res) => {
 };
 
 export const submitTask = async (req, res) => {
-  const { user } = req.user;
-  const { assignmentId } = req.body;
+  const user  = req.user;
+  console.log(user);
+  const { taskId,text } = req.body;
+  const file = req.file;
 
   try {
     let file_link = null;
     /*  *file work  */
-    if (!assignmentId) {
+    if (!taskId) {
       return res.json({
         success: true,
         message: "Assigment id should be given",
       });
     }
+
+
     if (!user || !user._id) {
-      return res.json({ success: false, message: "Invalid credintals" });
+      return res.json({ success: false,message: "Invalid credintals" });
+    }
+    if(!file){
+      return res.json({success:false,message:"No Assignment is provived"});
     }
     const get_student = await userModel.findById(user._id);
     if (!get_student || get_student.userType === "teacher") {
       return res.json({ success: false, message: "User must be a student" });
     }
-    const get_assignment = await assigntmentmodel.findById(assignmentId);
+    const get_assignment = await assigntmentmodel.findById(taskId);
 
     if (!get_assignment) {
       return res.json({ success: false, message: "No valid assignment " });
@@ -113,15 +170,25 @@ export const submitTask = async (req, res) => {
         message: "Already late for submission",
       });
     }
+     if (file) {
+      const fileBuffer = file.buffer;
+      const mimetype = file.mimetype; 
+
+    
+      const uploadResult = await uploadToCloudinary(fileBuffer, "task_attachments", mimetype);
+      file_link = uploadResult.secure_url;
+    }
+
     const new_submission = await submissionmodel.create({
-      assignment: assignmentId,
+      assignment: taskId,
       student: user._id,
       fileUrl: file_link,
+      text:text?text:"",
       submittedAt: Date.now(),
       status: "submitted",
     });
 
-    return res.json({ sucess: true, message: "Assignment submitted" });
+    return res.json({ success: true, message: "Assignment submitted" });
   } catch (error) {
     res.json({ success: false, message: "Error in server" });
   }

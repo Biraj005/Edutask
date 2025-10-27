@@ -16,6 +16,11 @@ const submissionSchema = new mongoose.Schema(
       type: String,
       default:null,
     },
+    text:{
+      type:String,
+      default:""
+
+    },
     submittedAt: {
       type: Date,
       default: Date.now

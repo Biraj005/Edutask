@@ -11,11 +11,11 @@ import { useEffect } from 'react';
 
 const Dashboard = () => {
 
-    const { loggedIn,getSubjects,getSubjectLoading,setGetSubjectsLoading} = useContext(AuthContext);
+    const { loggedIn,getSubjects,getSubjectLoading,setGetSubjectsLoading,isPopupOpen, setPopupOpen} = useContext(AuthContext);
 
     
     const [isSidebarOpen, setSidebarOpen] = useState(false);
-    const [isPopupOpen, setPopupOpen] = useState(false);
+    // const [isPopupOpen, setPopupOpen] = useState(false);
      useEffect(()=>{
         async function init() {
              await getSubjects();
@@ -49,7 +49,7 @@ const Dashboard = () => {
     return (
         <div className="dashboard-container">
             {isSidebarOpen && <Sidebar user={user} onClose={() => setSidebarOpen(false)} />}
-            {isPopupOpen && <AddSubjectPopup onClose={() => setPopupOpen(false)} onSubmit={handleAddSubject} />}
+            {isPopupOpen && <AddSubjectPopup  onSubmit={handleAddSubject} />}
 
             <header className="dashboard-header">
                 <div className="dashboard-title-group">

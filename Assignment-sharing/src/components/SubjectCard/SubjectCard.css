@@ -167,13 +167,16 @@
     font-weight: 600;
     color: #121212;
 }
-.status-pill.completed {
+.status-pill.complete{
     background-color: #82dd90;
 }
 .status-pill.pending {
     background-color: #ffd166;
 }
-
+.status-pill.expired {
+  background-color: #e74c3c;  
+  color: #fff;
+}
 .no-tasks-msg {
     font-size: 0.9rem;
     color: #888;
@@ -244,4 +247,24 @@
 
 .remove-task-btn:hover {
     background-color: #c82333;
+}
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}
+
+.status-pill.complete {
+  background-color: #5cb85c;
+}
+
+.status-pill.pending {
+  background-color: #f0ad4e;
+}
+
+.status-pill.expired {
+  background-color: #d9534f;
 }

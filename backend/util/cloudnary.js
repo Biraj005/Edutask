@@ -8,21 +8,23 @@ cloudinary.config({
   api_secret: process.env.CLOUDNARY_API_SECRET
 });
 
-
-export const uploadToCloudinary = (fileBuffer, folderName) => {
+export const uploadToCloudinary = (fileBuffer, folderName, mimetype) => {
   return new Promise((resolve, reject) => {
+    const isPdf = mimetype === 'application/pdf';
+
     const stream = cloudinary.uploader.upload_stream(
       {
         folder: folderName,
-        resource_type: "auto" // Auto-detects file type (image, pdf, etc.)
+        resource_type: isPdf ? 'raw' : 'image',  
+        use_filename: true,
+        unique_filename: false,
       },
       (error, result) => {
         if (error) return reject(error);
         resolve(result);
       }
     );
+
     stream.end(fileBuffer);
   });
 };
-
-

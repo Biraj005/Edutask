@@ -1,5 +1,5 @@
 import React from 'react';
-import './StudentList.css';
+import './StudentList.css'
 import { useContext } from 'react';
 import { AuthContext } from '../../Store/AuthContext';
 import { useEffect } from 'react';

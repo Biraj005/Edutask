@@ -1,12 +1,13 @@
-
-import React from 'react';
 import './SubjectList.css';
 import { useContext } from 'react';
 import { AuthContext } from '../../Store/AuthContext';
+import { ThemeContext } from '../../Store/ThemeContext';
 
 
-const SubjectList = ({ subjects, onSelect }) => {
+const SubjectList = ({ subjects, onSelect ,useruserType}) => {
+  
   const {getSubjectLoading,setGetSubjectsLoading} = useContext(AuthContext);
+
   return (
     <div className="subject-list-container">
       <div className="subject-list">
@@ -22,24 +23,8 @@ const SubjectList = ({ subjects, onSelect }) => {
               <h3 className="subject-name">{subject.name}</h3>
               <p className="subject-description">{subject.description}</p>
             </div>
-            
-            {subject.pendingTasks > 0 && (
-              <div className="notification-group" title={`${subject.pendingTasks} pending tasks`}>
-                <span className="notification-count">{subject.pendingTasks}</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="notification-bell-item"
-                >
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                </svg>
-              </div>
+            {useruserType==='teacher' &&(
+              <button>Remove</button>
             )}
           </div>
         ))}

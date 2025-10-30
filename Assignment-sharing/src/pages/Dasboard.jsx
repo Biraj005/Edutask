@@ -15,7 +15,6 @@ const Dashboard = () => {
 
     
     const [isSidebarOpen, setSidebarOpen] = useState(false);
-    // const [isPopupOpen, setPopupOpen] = useState(false);
      useEffect(()=>{
         async function init() {
              await getSubjects();
@@ -40,16 +39,10 @@ const Dashboard = () => {
         setSubjects(prev => [...prev, { ...newSubjectData, pendingTasks: 0, tasks: [] }]);
         setPopupOpen(false);
     };
-
-      useEffect(()=>{ 
-
-       
-
-    },[]) 
     return (
         <div className="dashboard-container">
             {isSidebarOpen && <Sidebar user={user} onClose={() => setSidebarOpen(false)} />}
-            {isPopupOpen && <AddSubjectPopup  onSubmit={handleAddSubject} />}
+            {isPopupOpen && <AddSubjectPopup  onSubmit={handleAddSubject} onClose={()=>setPopupOpen(false)} />}
 
             <header className="dashboard-header">
                 <div className="dashboard-title-group">
@@ -70,7 +63,7 @@ const Dashboard = () => {
                     <SubjectList
                         subjects={subjects}
                         onSelect={handleSubjectSelect}
-                        useruserType={user.userType}
+                        useruserType={user.role}
                     />
                 ) : (
                     <div className="no-subjects-container">

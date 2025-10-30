@@ -8,6 +8,7 @@ import SubmitTaskPopup from "../SubmitTaskPopup/SubmitTaskPopup";
 import FileViewer from "../Pdfviewer/Pdfviewer";
 import "./SubjectCard.css";
 import { AuthContext } from "../../Store/AuthContext";
+import ViewSubmissionsPopup from "../ViewSubmission/ViewSubmissionsModal";
 
 const SubjectCard = () => {
   const navigate = useNavigate();
@@ -33,6 +34,9 @@ const SubjectCard = () => {
   const [studentSearchResults, setStudentSearchResults] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const [pdfToView, setPdfToView] = useState(null);
+  const [viewSubmissionsOpen, setViewSubmissionsOpen] = useState(false);
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
+
 
   useEffect(() => {
     if (!selectedSubject) navigate("/home");
@@ -61,7 +65,7 @@ const SubjectCard = () => {
   const handleRemoveTask = (taskId) => {
     removeTask(taskId);
   };
-
+   
   const handleAddStudent = (student) => {
     const updatedStudent = { ...student, code: selectedSubject.code };
     addStudent(updatedStudent);
@@ -79,19 +83,38 @@ const SubjectCard = () => {
     setSubmitPopupOpen(true);
   };
 
-  const handleTaskClick = (task) => {
-    if (!task.attachments) {
+  const handleTaskClick = (task, type) => {
+  
+
+    if (type === 'task' && task.attachments) {
+      setPdfToView(task.attachments);
+    } else if(task=='task') {
       alert("No PDF attached for this task!");
       return;
     }
-    setPdfToView(task.attachments); // Cloudinary link
+    console.log(task)
+    if (type === 'submission' && task.fileUrl) {
+      setPdfToView(task.fileUrl);
+
+    } else if(type==='submission') {
+      alert("No PDF attached for this task!");
+      return;
+
+
+    }
+
   };
+const handleViewSubmissions = (taskId) => {
+  console.log(taskId)
+  setSelectedTaskId(taskId);
+  setViewSubmissionsOpen(true);
+};
+
+ 
 
   useEffect(() => {
     getTasks({ subject: selectedSubject._id });
   }, []);
-
-  // === STUDENT VIEW ===
   const StudentView = () => (
     <div className="tasks-section">
       <h4>All Tasks ({tasks?.length || 0})</h4>
@@ -111,17 +134,25 @@ const SubjectCard = () => {
 
                 <button
                   className="action-btn view-task-btn"
-                  onClick={() => handleTaskClick(task)}
+                  onClick={() => handleTaskClick(task,'task')}
                 >
                   View
                 </button>
 
+                {task.fileUrl && (
+                  <button
+                    className="action-btn view-submission-btn"
+                    onClick={() => handleTaskClick(task,'submission')}
+                  >
+                    View Submission
+                  </button>
+                )}
                 {task.status !== "expired" && (
                   <button
                     className="action-btn submit-task-btn"
                     onClick={() => handleTaskSubmitClick(task)}
                   >
-                    Submit
+                    {task.fileUrl ? "Resubmit" : "Submit"}
                   </button>
                 )}
               </div>
@@ -134,64 +165,71 @@ const SubjectCard = () => {
     </div>
   );
 
-  // === TEACHER VIEW ===
-  const TeacherView = () => (
-    <>
-      <div className="teacher-actions">
-        <button
-          className="action-btn student-list-btn"
-          onClick={() => setStudentListOpen(true)}
-        >
-          Student List
-        </button>
+const TeacherView = () => (
+  <>
+    <div className="teacher-actions">
+      <button
+        className="action-btn student-list-btn"
+        onClick={() => setStudentListOpen(true)}
+      >
+        Student List
+      </button>
 
-        <button
-          className="action-btn add-student-btn"
-          onClick={() => setAddStudentOpen(true)}
-        >
-          Add Student
-        </button>
-      </div>
+      <button
+        className="action-btn add-student-btn"
+        onClick={() => setAddStudentOpen(true)}
+      >
+        Add Student
+      </button>
+    </div>
 
-      <div className="tasks-section">
-        <h4>All Assigned Tasks ({tasks?.length || 0})</h4>
+    <div className="tasks-section">
+      <h4>All Assigned Tasks ({tasks?.length || 0})</h4>
 
-        {getTaskLoading ? (
-          <p className="no-tasks-msg">Getting tasks...</p>
-        ) : tasks.length > 0 ? (
-          <ul className="task-list">
-            {tasks.map((task) => (
-              <li key={task._id} className="task-item">
-                <span className="task-title-span">{task.title}</span>
+      {getTaskLoading ? (
+        <p className="no-tasks-msg">Getting tasks...</p>
+      ) : tasks.length > 0 ? (
+        <ul className="task-list">
+          {tasks.map((task) => (
+            <li key={task._id} className="task-item">
+              <span className="task-title-span">{task.title}</span>
 
-                <div className="task-item-controls">
-                  <span className={`status-pill ${task.status}`}>
-                    {task.status}
-                  </span>
+              <div className="task-item-controls">
+                <span className={`status-pill ${task.status}`}>
+                  {task.status}
+                </span>
 
-                  <button
-                    className="action-btn view-task-btn"
-                    onClick={() => handleTaskClick(task)}
-                  >
-                    View
-                  </button>
+                <button
+                  className="action-btn view-task-btn"
+                  onClick={() => handleTaskClick(task, "task")}
+                >
+                  View
+                </button>
 
-                  <button
-                    className="action-btn remove-task-btn"
-                    onClick={() => handleRemoveTask(task._id)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="no-tasks-msg">No tasks available.</p>
-        )}
-      </div>
-    </>
-  );
+                <button
+                  className="action-btn view-submission-btn"
+                  onClick={() => handleViewSubmissions(task._id)}
+                >
+                  View Submissions
+                </button>
+
+                <button
+                  className="action-btn remove-task-btn"
+                  onClick={() => handleRemoveTask(task._id)}
+                >
+                  Remove
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="no-tasks-msg">No tasks available.</p>
+      )}
+    </div>
+  </>
+);
+
 
   return (
     <>
@@ -213,6 +251,14 @@ const SubjectCard = () => {
           </div>
         </div>
       )}
+      {viewSubmissionsOpen && (
+      <ViewSubmissionsPopup
+        taskId={selectedTaskId}
+        onClose={() => setViewSubmissionsOpen(false)}
+        onViewFile={(fileUrl) => setPdfToView(fileUrl)}
+      />
+    )}
+
 
       {isAddStudentOpen && (
         <div className="popup-overlay" onClick={closeFindStudent}>
@@ -227,8 +273,6 @@ const SubjectCard = () => {
       )}
 
       {isSubmitPopupOpen && <SubmitTaskPopup task={selectedTask} />}
-
-      {/* ✅ PDF Viewer Popup */}
       {pdfToView && <FileViewer fileUrl={pdfToView} onClose={() => setPdfToView(null)} />}
 
       <div className="subject-card-page-container">

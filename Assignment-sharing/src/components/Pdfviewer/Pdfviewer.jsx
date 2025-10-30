@@ -1,16 +1,12 @@
-import React from "react";
 import "./Pdfviewer.css";
-
 const FileViewer = ({ fileUrl, onClose }) => {
   console.log(fileUrl);
 
-  // Normalize URL — if Cloudinary 'raw' upload doesn’t end with .pdf, append it for viewing
   const normalizedUrl = fileUrl?.includes("raw/upload") && !fileUrl.endsWith(".pdf")
     ? `${fileUrl}.pdf`
     : fileUrl;
 
 
-  // Check for image or pdf
   const isImageUrl = /\.(jpeg|jpg|gif|png|svg|webp)$/i.test(normalizedUrl);
   const isPdfUrl = /\.pdf$/i.test(normalizedUrl);
 console.log(normalizedUrl)

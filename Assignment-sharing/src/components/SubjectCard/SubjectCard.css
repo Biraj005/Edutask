@@ -268,3 +268,17 @@
 .status-pill.expired {
   background-color: #d9534f;
 }
+.view-submission-btn {
+  background-color: #3b82f6; /* blue */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.view-submission-btn:hover {
+  background-color: #2563eb;
+}
+

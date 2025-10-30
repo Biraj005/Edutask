@@ -2,36 +2,51 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.75);
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 9999; /* ✅ Make sure it’s above everything */
 }
 
 .file-viewer-popup-content {
   position: relative;
   width: 90%;
-  height: 90%;
-  background: #fff;
+  max-width: 900px;
+  height: 90vh;
+  background: #1a1a1a;
   border-radius: 10px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
-.file-viewer-content {
+.file-viewer-content.pdf,
+.file-viewer-content.image {
   flex: 1;
   width: 100%;
   height: 100%;
   border: none;
 }
 
-.file-viewer-content.image {
-  object-fit: contain;
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 2rem;
+  color: white;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 10000;
 }
+
+.close-btn:hover {
+  color: #ffd166;
+}
+
 
 .close-btn {
   position: absolute;

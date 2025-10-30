@@ -1,0 +1,83 @@
+.submissions-popup {
+  position: relative;
+  width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #121212; /* black background */
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  color: #e0e0e0; /* light text */
+}
+
+
+.submission-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+}
+
+.submission-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1f1f1f; /* dark card background */
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  transition: background 0.2s;
+}
+
+.submission-item:hover {
+  background: #272727;
+}
+
+.submission-date {
+  color: #aaa;
+  font-size: 0.9em;
+}
+
+.view-file-btn {
+  background: #ffd166; /* warm yellow accent */
+  color: #121212;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.view-file-btn:hover {
+  background: #ffca28;
+}
+
+.submissions-popup h3 {
+  color: #ffd166;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 8px;
+  font-size: 1.4rem;
+}
+.no-submissions-msg {
+  color: #888;
+  text-align: center;
+  font-size: 1rem;
+  padding: 1rem 0;
+}
+
+.close-submissions-btn {
+  background: none;
+  border: none;
+  color: #a0a0a0;
+  font-size: 1.5rem; /* A good size for a modal 'x' */
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.close-submissions-btn:hover {
+  color: #fff;
+  transform: rotate(90deg);
+}

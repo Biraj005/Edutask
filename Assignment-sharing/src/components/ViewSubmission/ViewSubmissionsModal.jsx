@@ -28,10 +28,8 @@ const ViewSubmissionsPopup = ({ taskId, onClose, onViewFile }) => {
                         {submissions.map((sub) => (
                             <li key={sub._id} className="submission-item">
                                 <div className="submission-info">
-                                    <span className="submission-student-name">{sub.student?.name}</span>
-                                    <span className="submission-date">
-                                        {new Date(sub.createdAt).toLocaleString()}
-                                    </span>
+                                    <span className="submission-student-name">{sub?.name}</span>
+                        
                                 </div>
                                 <div className="submission-actions">
                                     {sub.fileUrl ? (

@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dasboard";
 import SubjectCard from "./components/SubjectCard/SubjectCard";
 import { ToastContainer } from "react-toastify";
 import { AuthContext } from "./Store/AuthContext";
+import MyAccount from "./pages/Myaccount";
 
 function App() {
   const { loggedIn } = useContext(AuthContext);
@@ -28,6 +29,9 @@ function App() {
             path="/subject"
             element={loggedIn ? <SubjectCard /> : <Navigate to="/login" />}
           />
+          <Route
+          path="/account"
+          element={loggedIn ? <MyAccount/> : <Navigate to='/login'/>}/>
         </Routes>
       </BrowserRouter>
 

@@ -148,7 +148,6 @@ export const submitTask = async (req, res) => {
 
   try {
     let file_link = null;
-    /*  *file work  */
     if (!taskId) {
       return res.json({
         success: true,
@@ -210,7 +209,7 @@ export const submitTask = async (req, res) => {
     }
 
     const new_submission = await submissionmodel.create({
-      name:user.name,
+      name:get_student.name,
       assignment: taskId,
       student: user._id,
       fileUrl: file_link,
@@ -221,6 +220,7 @@ export const submitTask = async (req, res) => {
 
     return res.json({ success: true, message: "Assignment submitted" });
   } catch (error) {
+    console.log(error)
     res.json({ success: false, message: "Error in server" });
   }
 };

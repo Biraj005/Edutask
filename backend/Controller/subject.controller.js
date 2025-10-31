@@ -71,28 +71,25 @@ export const addUser = async (req, res) => {
 
     if (!email || !code) {
       return res
-        .status(400)
         .json({ success: false, message: "Email and code are required" });
     }
 
     const teacher = await userModel.findById(user._id);
     if (!teacher || teacher.userType !== "teacher") {
       return res
-        .status(403)
+      
         .json({ success: false, message: "User must be a teacher" });
     }
 
     const student = await userModel.findOne({ email });
     if (!student || student.userType !== "student") {
       return res
-        .status(404)
         .json({ success: false, message: "No student found with this email" });
     }
 
     const subject = await SubjectModel.findOne({ code });
     if (!subject) {
       return res
-        .status(404)
         .json({ success: false, message: "Invalid subject code" });
     }
     console.log(student);
@@ -121,8 +118,8 @@ export const removeStudent = async (req, res) => {
   const user = req.user;
   const { studentId, subjectId } = req.body;
 
-  console.log("studentId",studentId);
-  console.log("SubjectId",subjectId);
+  console.log("studentId", studentId);
+  console.log("SubjectId", subjectId);
 
   try {
     if (!user || !user._id) {
@@ -152,15 +149,44 @@ export const removeStudent = async (req, res) => {
       },
     });
 
-    return res.json({success:true,message:"Student is removed"});
+    return res.json({ success: true, message: "Student is removed" });
   } catch (error) {
-    return res.json({success:false,message:"Error while removing student"});
+    return res.json({
+      success: false,
+      message: "Error while removing student",
+    });
   }
 };
 
+export const removeSubject = async (req, res) => {
+  const user = req.user;
+  const { subjectId } = req.body;
 
+  if (!user || !user._id || !subjectId) {
+    return res.json({ success: false, message: "Incomplete details" });
+  }
+  try {
+    const get_teacher = await userModel.findById(user._id);
 
+    if (!get_teacher) {
+      return res.json({ success: false, message: "User must be a teacher" });
+    }
+    const get_subject = await SubjectModel.findById(subjectId);
 
+    if (!get_subject) {
+      return res.json({ success: false, message: "Ivalid subject id" });
+    }
+    if (get_subject.creator.toString() !== user._id.toString()) {
+      return res.json({ success: false, message: "Invalid credintials" });
+    }
+    await SubjectModel.findByIdAndDelete(subjectId);
+
+    return res.json({ success: true, message: "Subject removed" });
+  } catch (e) {
+    console.log(e.message);
+    return res.json({ success: false, message: "Error in server" });
+  }
+};
 
 export const test = async (req, res) => {
   try {

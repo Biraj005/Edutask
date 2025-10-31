@@ -159,11 +159,8 @@ const AuthContextProvider = ({ children }) => {
             console.log("Fuck you")
 
             if (result.data.success) {
-
                 setStudenst(result.data.users);
-
             } else {
-
                 toast.error(error.message);
             }
         } catch (error) {
@@ -409,6 +406,33 @@ const AuthContextProvider = ({ children }) => {
             setGetSubmmisonLoading(false);
         }
     }
+    const removeSubject = async (Data)=>{
+        console.log(Data);
+        try { 
+            const result = await axios.delete(`${backendUrl}/api/subject`,{
+                data:Data,
+                withCredentials:true,
+                headers:{
+                    "Content-Type":"application/json"
+                }
+            })
+
+            if(result.data.success){
+                setSubjects(prev=>prev.filter(subject => subject._id!==Data.subjectId));
+                toast.success(result.data.message);
+            }else{
+
+                toast.success(result.data.message);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.success(error.message);
+            
+        }
+
+
+
+    }
     const contextValue = {
 
         setUser,
@@ -429,7 +453,7 @@ const AuthContextProvider = ({ children }) => {
         getSubjectLoading, setGetSubjectsLoading, removeTask, isAddTaskOpen, setAddTaskOpen,
         taskFormLoading, settaskFormLoading, isSubmitPopupOpen, setSubmitPopupOpen, submitTask,
         isSubmitting, setIsSubmitting, isPopupOpen, setPopupOpen, getSubmissions,
-        getSubmmisonLoading, setGetSubmmisonLoading, submissions
+        getSubmmisonLoading, setGetSubmmisonLoading, submissions,removeSubject
 
     };
 

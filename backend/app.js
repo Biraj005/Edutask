@@ -24,8 +24,8 @@ app.use(subjectRouter);
 app.get("/", (req, res) => {
   res.send("Hiii");
 });
-
+const PORT = process.env.PORT || 3000;
 connectDb();
-app.listen(process.env.PORT, () => {
+app.listen(PORT, () => {
   console.log(`the app is running at ${process.env.PORT}`);
 });

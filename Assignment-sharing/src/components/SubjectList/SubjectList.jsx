@@ -6,7 +6,6 @@ const SubjectList = ({ subjects, onSelect, useruserType }) => {
   const { getSubjectLoading, setGetSubjectsLoading ,removeSubject} = useContext(AuthContext);
 
   const handelRemoveCLick = (subject) => {
-    console.log('Remove clicked for:', subject);
     removeSubject({subjectId:subject._id})
   };
 

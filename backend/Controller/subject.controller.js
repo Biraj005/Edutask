@@ -2,12 +2,9 @@ import SubjectModel from "../Model/Subject.model.js";
 import userModel from "../Model/user.mode.js";
 
 export const getAllsubjects = async (req, res) => {
-  //console.log(req.user);
-
   const user = req.user;
   try {
     let userDoc = await userModel.findById(user._id);
-
     const all_subjects = await SubjectModel.find({
       _id: { $in: userDoc.subjects },
     });
@@ -24,9 +21,6 @@ export const getSingleSubject = (req, res) => {
 
 export const addSubject = async (req, res) => {
   const { name, code, description, semester } = req.body;
-  console.log(name, code, description);
-  console.log(req.user);
-
   try {
     const find_teacher = await userModel.findById(req.user._id);
 
@@ -55,7 +49,6 @@ export const addSubject = async (req, res) => {
       { $push: { subjects: newSubject._id } },
       { new: true }
     );
-    console.log("new Subject", newSubject);
     res.json({ success: true, message: "Subject added", newSubject });
   } catch (error) {
     console.error(error);
@@ -67,8 +60,6 @@ export const addUser = async (req, res) => {
   try {
     const user = req.user;
     const { email, code } = req.body;
-    console.log(code);
-
     if (!email || !code) {
       return res
         .json({ success: false, message: "Email and code are required" });
@@ -92,8 +83,6 @@ export const addUser = async (req, res) => {
       return res
         .json({ success: false, message: "Invalid subject code" });
     }
-    console.log(student);
-
     if (student.subjects.includes(subject._id)) {
       return res.json({
         success: false,
@@ -117,10 +106,6 @@ export const addUser = async (req, res) => {
 export const removeStudent = async (req, res) => {
   const user = req.user;
   const { studentId, subjectId } = req.body;
-
-  console.log("studentId", studentId);
-  console.log("SubjectId", subjectId);
-
   try {
     if (!user || !user._id) {
       return res.json({ success: false, message: "User must be a teacher" });
@@ -186,11 +171,4 @@ export const removeSubject = async (req, res) => {
     console.log(e.message);
     return res.json({ success: false, message: "Error in server" });
   }
-};
-
-export const test = async (req, res) => {
-  try {
-    const subject = await SubjectModel.find();
-    res.send(subject);
-  } catch (error) {}
 };

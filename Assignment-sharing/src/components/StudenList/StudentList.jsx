@@ -11,7 +11,6 @@ const StudentList = ({  onRemove, onClose }) => {
     const {students,loadingstudentList, getSubjects,getStudents} = useContext(AuthContext);
     useEffect(()=>{
         getStudents(selectedSubject.code);
-        console.log(students)
     },[])   
     return (
         <div className="student-list-container">

@@ -92,7 +92,6 @@ const SubjectCard = () => {
       alert("No PDF attached for this task!");
       return;
     }
-    console.log(task)
     if (type === 'submission' && task.fileUrl) {
       setPdfToView(task.fileUrl);
 
@@ -105,7 +104,6 @@ const SubjectCard = () => {
 
   };
 const handleViewSubmissions = (taskId) => {
-  console.log(taskId)
   setSelectedTaskId(taskId);
   setViewSubmissionsOpen(true);
 };

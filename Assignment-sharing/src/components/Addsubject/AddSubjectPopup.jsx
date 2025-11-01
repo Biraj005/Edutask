@@ -27,7 +27,7 @@ const AddSubjectPopup = ({  onSubmit }) => {
             return;
         }
         addSubject(formData);
-        console.log(formData);
+     
     };
 
     return (

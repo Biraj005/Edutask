@@ -40,9 +40,7 @@ const AuthContextProvider = ({ children }) => {
                 withCredentials: true,
                 headers: { "Content-Type": "application/json" }
             })
-
             setSignupageLoading(false);
-
             if (result.data.success) {
                 toast.success(result.data.message);
                 localStorage.setItem('user', JSON.stringify(result.data.user));
@@ -69,28 +67,21 @@ const AuthContextProvider = ({ children }) => {
         } catch (error) {
             console.log("Error while logout");
             toast.error("Error");
-
         }
     };
     const loginhandle = async (Data) => {
         setLoginPageLoading(true);
-
         try {
             const result = await axios.post(`${backendUrl}/api/login`, Data, {
                 withCredentials: true,
                 headers: { "Content-Type": "application/json" }
             })
-            console.log(result.data);
-            console.log(result.data.message);
             if (result.data.success) {
                 localStorage.setItem('user', JSON.stringify(result.data.user));
                 setUser(result.data.user);
-                console.log(" Backend success:", JSON.stringify(result.data.user));
                 setLoggedIn(true);
-                console.log("setLoggedIn(true) called");
                 toast.success(result.data.message);
             } else {
-                console.log(" Backend failure:", result.data);
                 toast.error(result.data.message);
             }
             setLoginPageLoading(false);
@@ -105,7 +96,6 @@ const AuthContextProvider = ({ children }) => {
                 withCredentials: true,
                 headers: { "Content-Type": "application/json" }
             })
-            //  console.log(result.data.subjects);
             setSubjects(result.data.subjects);
         } catch (error) {
             toast.error('Error');
@@ -117,7 +107,6 @@ const AuthContextProvider = ({ children }) => {
     }
     const addStudent = async (data) => {
         setStudentAddLoading(true);
-        console.log(data)
         try {
             const result = await axios.put(`${backendUrl}/api/subject/user`, data, {
                 withCredentials: true,
@@ -125,8 +114,6 @@ const AuthContextProvider = ({ children }) => {
                     "Content-Type": "application/json"
                 }
             })
-            //  console.log(result)
-
             if (result.data.success) {
                 toast.success("Student added");
             } else {
@@ -135,18 +122,13 @@ const AuthContextProvider = ({ children }) => {
 
         } catch (error) {
             toast.error(error.message);
-
             console.log(error.message);
-
         }
         finally {
             setStudentAddLoading(false);
-
         }
-
     }
     const getStudents = async (code) => {
-        // console.log(code);
         setLoadingStudentList(true);
         try {
             const result = await axios.get(`${backendUrl}/api/user/${code}`, {
@@ -155,9 +137,6 @@ const AuthContextProvider = ({ children }) => {
                     "Content-Type": "application/json"
                 }
             });
-            console.log(result.data.users);
-            console.log("Fuck you")
-
             if (result.data.success) {
                 setStudenst(result.data.users);
             } else {
@@ -172,7 +151,6 @@ const AuthContextProvider = ({ children }) => {
 
     }
     const addSubject = async (data) => {
-        console.log(data);
         setAddSubjectLoading(true);
         try {
             const result = await axios.post(`${backendUrl}/api/subject`, data, {
@@ -181,30 +159,21 @@ const AuthContextProvider = ({ children }) => {
                     "Content-Type": "application/json"
                 }
             })
-
             if (result.data.success) {
                 toast.success("Subject added Successfully");
-                console.log(result.data)
             } else {
                 toast.error(result.data.message)
             }
-
         } catch (error) {
-
             toast.error(error.message);
-
         }
         finally {
             setPopupOpen(false);
             setAddSubjectLoading(false);
-
         }
     }
     const removeStudent = async (data) => {
-        console.log(data);
-
         try {
-
             const result = await axios.delete(`${backendUrl}/api/student`, {
                 data: data,
                 withCredentials: true,
@@ -212,61 +181,40 @@ const AuthContextProvider = ({ children }) => {
                     "Content-Type": "application/json"
                 }
             });
-
-
             if (result.data.success) {
-
                 const newStudentList = students.filter(item => item._id !== data.studentId);
                 setStudenst(newStudentList);
                 toast.success("Student is removed");
             } else {
                 toast.error("Student is not removed");
             }
-
         } catch (error) {
-
             toast.error(error.message);
-
         }
     }
     const addTask = async (Data) => {
-        //{title: 'giii', description: 'giii', deadline: '2025-10-18', file: File}
         settaskFormLoading(true)
-
         const formData = new FormData();
         formData.append('title', Data.title);
         formData.append('description', Data.description);
         formData.append('deadline', Data.deadline);
         formData.append('subject', Data.subject);
-
-
-        console.log(Data);
-
-
         if (Data.file) {
-            console.log(Data.file)
             formData.append('attachment', Data.file);
         }
         setAddTaskLoading(true);
-
-
         try {
             const result = await axios.put(`${backendUrl}/api/teacher/task`, formData, {
                 withCredentials: true,
             })
             if (result.data.success) {
-
                 setTasks(prevTasks => [...prevTasks, result.data.newTask]);
-                //console.log(tasks)
-                console.log(result.data.newTask);
+
                 toast.success("Task added");
-
-
             } else {
 
                 toast.error(result.data.message);
             }
-            console.log(result.data);
 
         } catch (error) {
             toast.error(error.message);
@@ -276,13 +224,10 @@ const AuthContextProvider = ({ children }) => {
             setAddTaskOpen(false);
             settaskFormLoading(false);
         }
-
-
     }
     const getTasks = async (Data) => {
         setGetTaskLoading(true);
         const url = `${backendUrl}/api/${user && user.role === 'teacher' ? "teacher" : "student"}/tasks`;
-        console.log(url)
         try {
             const result = await axios.post(`${backendUrl}/api/${user && user.role === 'teacher' ? "teacher" : "student"}/tasks`, Data, {
                 withCredentials: true,
@@ -292,11 +237,9 @@ const AuthContextProvider = ({ children }) => {
             })
             if (result.data.success) {
                 setTasks(result.data.tasks);
-                console.log(result.data.tasks)
             } else {
                 toast.error(result.data.message);
             }
-            console.log(result.data)
 
         } catch (error) {
             toast.error(error.message);
@@ -304,15 +247,8 @@ const AuthContextProvider = ({ children }) => {
         finally {
             setGetTaskLoading(false);
         }
-
-
     }
     const removeTask = async (data) => {
-        console.log(data)
-        // data = {
-        //     taskId:data;
-        // }
-        // return;
         try {
             const result = await axios.delete(`${backendUrl}/api/teacher/task`, {
                 data: {
@@ -332,18 +268,11 @@ const AuthContextProvider = ({ children }) => {
                 toast.error(result.data.message);
             }
         } catch (error) {
-
             toast.error(error.message);
-
         }
     }
     const submitTask = async (Data) => {
-        console.log(Data.get("taskId"));
         setIsSubmitting(true);
-        // formData.append("taskId", task._id);
-        // if (file) formData.append("file", file);
-        // if (text.trim()) formData.append("text", text);
-
         try {
             const result = await axios.put(`${backendUrl}/api/submit`, Data, {
                 withCredentials: true,
@@ -373,7 +302,6 @@ const AuthContextProvider = ({ children }) => {
         }
     }
     const getSubmissions = async (Data) => {
-        console.log(Data);
         setGetSubmmisonLoading(true);
         if (!Data) {
             alert("Task id must provived");
@@ -395,19 +323,16 @@ const AuthContextProvider = ({ children }) => {
             } else {
                 toast.error(result.data.message);
             }
-            console.log(result.data);
+        
 
         } catch (error) {
-
             console.log(error.message)
-
         }
         finally {
             setGetSubmmisonLoading(false);
         }
     }
     const removeSubject = async (Data)=>{
-        console.log(Data);
         try { 
             const result = await axios.delete(`${backendUrl}/api/subject`,{
                 data:Data,

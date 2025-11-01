@@ -18,7 +18,6 @@ export const getAllTasksForTeacher = async (req, res) => {
     }
 
     const tasks = await assigntmentmodel.find({ subject });
-
     return res.json({ success: true, tasks });
   } catch (error) {
     res.json({ success: false, message: "Error in server" });
@@ -88,14 +87,10 @@ export const getAllTasksForStudent = async (req, res) => {
 export const addTask = async (req, res) => {
   const user = req.user;
   const { title, description, subject, deadline } = req.body;
-  // console.log(title,description,subject,deadline,attachments);
-  //return res.send("Test");
   if (req.fileValidationError) {
     return res.json({ success: false, message: req.fileValidationError });
   }
   const file = req.file;
-  console.log(title, subject, description, deadline);
-  console.log("file", file);
   try {
     if (!user || !user._id) {
       return res.json({ success: false, message: "User must be a teacher" });
@@ -128,7 +123,6 @@ export const addTask = async (req, res) => {
       deadline,
       attachments: attachmentUrl,
     });
-    console.log("Here is you task", newTask);
 
     res.json({ success: true, message: "Task added", newTask });
   } catch (error) {
@@ -142,7 +136,6 @@ export const addTask = async (req, res) => {
 
 export const submitTask = async (req, res) => {
   const user = req.user;
-  console.log(user);
   const { taskId, text } = req.body;
   const file = req.file;
 
@@ -193,7 +186,6 @@ export const submitTask = async (req, res) => {
     });
 
     if (check_prev) {
-      console.log("Hiii");
       const newDetails = {};
 
       if (file_link) {
@@ -202,9 +194,7 @@ export const submitTask = async (req, res) => {
       if (text) {
         newDetails.text = text;
       }
-
       await submissionmodel.findByIdAndUpdate(check_prev._id, newDetails);
-
       return res.json({ success: true, message: "Assignment Resubmitted" });
     }
 
@@ -228,8 +218,6 @@ export const submitTask = async (req, res) => {
 export const removeTask = async (req, res) => {
   const user = req.user;
   const { taskId } = req.body;
-  console.log(taskId);
-
   if (!user || !user._id) {
     return res.json({ success: false, message: "No user details provide" });
   }
@@ -238,12 +226,10 @@ export const removeTask = async (req, res) => {
   }
   try {
     const get_teacher = await userModel.findById(user._id);
-    console.log(get_teacher);
-
     if (!get_teacher) {
       return res.json({ success: false, message: "Invalid credintials" });
     }
-    console.log("1");
+
     const get_task = await assigntmentmodel.findById(taskId);
 
     if (!get_task) {
@@ -252,29 +238,11 @@ export const removeTask = async (req, res) => {
     if (get_task.createdBy.toString() !== get_teacher._id.toString()) {
       return res.json({ success: false, message: "Invalid credintials" });
     }
-
     await assigntmentmodel.findByIdAndDelete(taskId);
-
     res.json({ success: true, message: "Task removed" });
   } catch (error) {
     res.json({ success: false, message: "Error in server" });
     console.error(error.message);
-  }
-};
-export const getSingleTask = async (req, res) => {
-  const { userId, taskId } = req.params;
-  console.log(userId);
-  res.send(`Here is your task ${userId} ${taskId}`);
-};
-
-export const getUser = async (req, res) => {
-  const { _id } = req.body;
-
-  try {
-    const user = await userModel.findById(_id);
-    return res.send(user);
-  } catch (error) {
-    res.send(error);
   }
 };
 
@@ -290,7 +258,7 @@ export const getSubmissions = async (req, res) => {
   }
   try {
     const get_teacher = await userModel.findById(user._id);
-    console.log(get_teacher);
+
 
     if (!get_teacher) {
       return res.json({ success: false, message: "Invalid credintials" });

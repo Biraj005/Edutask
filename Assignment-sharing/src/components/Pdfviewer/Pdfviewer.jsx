@@ -1,7 +1,6 @@
 import "./Pdfviewer.css";
 const FileViewer = ({ fileUrl, onClose }) => {
-  console.log(fileUrl);
-
+ 
   const normalizedUrl = fileUrl?.includes("raw/upload") && !fileUrl.endsWith(".pdf")
     ? `${fileUrl}.pdf`
     : fileUrl;
@@ -9,7 +8,6 @@ const FileViewer = ({ fileUrl, onClose }) => {
 
   const isImageUrl = /\.(jpeg|jpg|gif|png|svg|webp)$/i.test(normalizedUrl);
   const isPdfUrl = /\.pdf$/i.test(normalizedUrl);
-console.log(normalizedUrl)
 
   let fileContent;
 

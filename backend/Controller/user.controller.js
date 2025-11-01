@@ -6,8 +6,6 @@ import bcrypt from "bcrypt";
 export const signupUser = async (req, res) => {
   try {
     const { name, email, password, department, type, passingyear } = req.body;
-    console.log(name, email, password, department, type, passingyear);
-
     if (!email || !name || !password || !department || !type) {
       return res.json({ success: false, message: "User details required" });
     }
@@ -68,7 +66,6 @@ export const loginUser = async (req, res) => {
   } catch (error) {
     console.error("Error whing finding user");
   }
-  console.log(user);
   if (!user) {
     res.json({ success: false, message: "No user found" });
     return;
@@ -113,9 +110,6 @@ export const getUser = async (req, res) => {
   try {
     const user = req.user;                
     const { code } = req.params;         
-    console.log("user",user)
-    console.log("code",code); 
-
     if (!code) {
       return res.status(400).json({ success: false, message: "Need paper code" });
     }
@@ -130,8 +124,6 @@ export const getUser = async (req, res) => {
     if (!subjectDoc) {
       return res.status(404).json({ success: false, message: "Subject not found" });
     }
-
-
    const users = await userModel.find({
     subjects: { $in: [subjectDoc._id] },
     userType: { $ne: "teacher" }    

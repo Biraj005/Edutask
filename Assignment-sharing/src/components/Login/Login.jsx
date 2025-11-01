@@ -10,12 +10,6 @@ const Login = ({changeForm}) => {
   const {loginhandle,loginpgaeLoading, setLoginPageLoading,loggedIn} = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // useEffect(()=>{
-  //   console.log("Inside login component",loggedIn);
-  //   if(loggedIn){
-  //     navigate("/home");
-  //   }
-  // },[loggedIn]);
   const handleSubmit = (e) => {
     e.preventDefault();
     const Data ={email,password};

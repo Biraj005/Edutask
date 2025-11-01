@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* ✅ Make sure it’s above everything */
+  z-index: 9999;
 }
 
 .file-viewer-popup-content {
@@ -23,20 +23,23 @@
   flex-direction: column;
 }
 
-.file-viewer-content.pdf,
-.file-viewer-content.image {
-  flex: 1;
+.file-viewer-content {
+  flex: 1; 
   width: 100%;
   height: 100%;
   border: none;
+  min-height: 0; 
 }
 
+.file-viewer-content.image {
+  object-fit: contain; 
+}
 .close-btn {
   position: absolute;
   top: 10px;
   right: 15px;
   font-size: 2rem;
-  color: white;
+  color: white; 
   background: transparent;
   border: none;
   cursor: pointer;
@@ -47,19 +50,26 @@
   color: #ffd166;
 }
 
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: transparent;
-  border: none;
-  font-size: 2rem;
-  cursor: pointer;
-  color: #333;
+.unsupported-file {
+  padding: 40px 20px;
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
-.unsupported-file {
-  padding: 20px;
-  text-align: center;
+.unsupported-file a {
+  color: #ffd166; 
+  text-decoration: none;
+  background: #333;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.unsupported-file a:hover {
+  background: #444;
 }

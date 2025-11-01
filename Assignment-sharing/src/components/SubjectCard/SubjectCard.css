@@ -1,284 +1,311 @@
+/* ========== BASE PAGE LAYOUT ========== */
 .subject-card-page-container {
-    padding: 2rem;
-    max-width: 900px;
-    margin: 0 auto;
-    animation: fadeIn 0.4s ease;
+  padding: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease;
 }
 
 .subject-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  text-align: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .subject-card-header h2 {
-    color: #ffd166;
-    margin: 0;
-    font-size: 1.8rem;
+  color: #ffd166;
+  margin: 0;
+  font-size: 1.8rem;
+  flex: 1;
+  text-align: center;
 }
 
 .back-btn-page {
-    background: none;
-    border: 1px solid #555;
-    color: #a0a0a0;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s ease;
+  background: none;
+  border: 1px solid #555;
+  color: #a0a0a0;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 .back-btn-page:hover {
-    background-color: #333;
-    color: #fff;
+  background-color: #333;
+  color: #fff;
 }
 
 .header-placeholder {
-    width: 130px; 
+  min-width: 100px;
 }
 
+/* ========== CARD STYLES ========== */
 .subject-card {
-    background: #2c2c2c;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  background: #2c2c2c;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
 .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.2rem;
-    border-bottom: 1px solid #444;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid #444;
 }
 
 .card-header h3 {
-    margin: 0;
-    font-size: 1.1rem;
-    color: #a0a0a0;
+  margin: 0;
+  font-size: 1.1rem;
+  color: #a0a0a0;
 }
 
 .add-task-btn {
-    background-color: #ffd166;
-    color: #121212;
-    border: none;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    font-size: 1.6rem;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease-in-out;
+  background-color: #ffd166;
+  color: #121212;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease-in-out;
+  flex-shrink: 0;
 }
+
 .add-task-btn:hover {
-    transform: scale(1.1) rotate(90deg);
+  transform: scale(1.1) rotate(90deg);
 }
 
 .card-body {
-    padding: 0.5rem 1.2rem 1.2rem;
+  padding: 0.5rem 1.2rem 1.2rem;
 }
 
+/* ========== TEACHER ACTION BUTTONS ========== */
 .teacher-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.8rem;
-    padding: 1rem 0 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  padding: 1rem 0 0.5rem;
 }
 
 .action-btn {
-    background: none;
-    border: 1px solid #555;
-    color: #b0b0b0;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  background: none;
+  border: 1px solid #555;
+  color: #b0b0b0;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .action-btn:hover {
-    background-color: #333;
-    color: #fff;
+  background-color: #333;
+  color: #fff;
 }
 
 .add-student-btn {
-    border-color: #ffd166;
-    color: #ffd166;
+  border-color: #ffd166;
+  color: #ffd166;
 }
 
 .add-student-btn:hover {
-    background-color: #ffd166;
-    color: #121212;
+  background-color: #ffd166;
+  color: #121212;
 }
 
+/* ========== TASK LIST SECTION ========== */
 .tasks-section h4 {
-    color: #a0a0a0;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    margin: 1.5rem 0 0.8rem 0;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #444;
+  color: #a0a0a0;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  margin: 1.5rem 0 0.8rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #444;
 }
 
 .task-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
 .task-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #383838;
-    padding: 0.7rem 1rem;
-    border-radius: 8px;
-    font-size: 0.95rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #383838;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  gap: 10px;
 }
 
-.submit-btn {
-    background: none;
-    border: 1px solid #ffd166;
-    color: #ffd166;
-    padding: 0.3rem 0.8rem;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
-}
-.submit-btn:hover {
-    background-color: #ffd166;
-    color: #121212;
-}
-
-.status-pill {
-    padding: 0.2rem 0.6rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #121212;
-}
-.status-pill.complete{
-    background-color: #82dd90;
-}
-.status-pill.pending {
-    background-color: #ffd166;
-}
-.status-pill.expired {
-  background-color: #e74c3c;  
-  color: #fff;
-}
-.no-tasks-msg {
-    font-size: 0.9rem;
-    color: #888;
-    padding: 0.5rem 0;
-    text-align: center;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.task-item.clickable {
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.task-item.clickable:hover {
-    background-color: #f0f0f0; 
-}
-
-.remove-subject-btn {
-    background-color: #dc3545; 
-    color: white;
-}
-
-.remove-subject-btn:hover {
-    background-color: #c82333; 
-}
-.task-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    border-bottom: 1px solid #eee;
+.task-title-span {
+  flex: 1;
+  min-width: 150px;
+  font-weight: 500;
+  color: #f0f0f0;
 }
 
 .task-item-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px; 
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.task-item-controls .action-btn {
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  white-space: nowrap;
 }
 
 .view-task-btn {
-    padding: 4px 10px;
-    font-size: 0.85rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  background-color: #007bff;
 }
-
 .view-task-btn:hover {
-    background-color: #0056b3;
-}
-.task-item.clickable:hover {
-    background-color: transparent;
-}
-.remove-task-btn {
-    padding: 4px 10px;
-    font-size: 0.85rem;
-    background-color: #dc3545; 
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  background-color: #0056b3;
 }
 
-.remove-task-btn:hover {
-    background-color: #c82333;
-}
-.status-pill {
-  padding: 4px 10px;
-  border-radius: 12px;
-  color: #fff;
-  font-weight: 500;
-  font-size: 0.9rem;
-  text-transform: capitalize;
-}
-
-.status-pill.complete {
-  background-color: #5cb85c;
-}
-
-.status-pill.pending {
-  background-color: #f0ad4e;
-}
-
-.status-pill.expired {
-  background-color: #d9534f;
-}
 .view-submission-btn {
-  background-color: #3b82f6; /* blue */
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
+  background-color: #3b82f6;
 }
-
 .view-submission-btn:hover {
   background-color: #2563eb;
 }
 
+.submit-task-btn {
+  background: none;
+  border: 1px solid #ffd166;
+  color: #ffd166;
+}
+.submit-task-btn:hover {
+  background-color: #ffd166;
+  color: #121212;
+}
+
+.remove-task-btn {
+  background-color: #dc3545;
+}
+.remove-task-btn:hover {
+  background-color: #c82333;
+}
+
+/* STATUS PILL STYLES */
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+.status-pill.complete {
+  background-color: #5cb85c;
+  color: #fff;
+}
+.status-pill.pending {
+  background-color: #f0ad4e;
+  color: #121212;
+}
+.status-pill.expired {
+  background-color: #d9534f;
+  color: #fff;
+}
+
+/* MISC */
+.no-tasks-msg {
+  font-size: 0.9rem;
+  color: #888;
+  padding: 0.5rem 0;
+  text-align: center;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== RESPONSIVE FIXES (ONLY <650px) ========== */
+@media (max-width: 650px) {
+  .task-item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #383838;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    gap: 0.8rem;
+  }
+
+  .task-title-span {
+    flex: 1 1 100%;
+    min-width: 200px;
+    color: #f0f0f0;
+    font-weight: 500;
+    word-break: break-word;
+    text-align: left;
+  }
+
+  .task-item-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .task-item-controls .action-btn {
+    flex: 1 1 auto;
+    text-align: center;
+    min-width: 90px;
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+
+  .status-pill {
+    align-self: flex-start;
+    padding: 3px 8px;
+    font-size: 0.75rem;
+  }
+}
+
+/* ========== EXTRA SMALL (<400px) OPTIONAL ========== */
+@media (max-width: 400px) {
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .task-item-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .task-item-controls .action-btn {
+    width: 100%;
+  }
+}

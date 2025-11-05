@@ -4,13 +4,16 @@ import { toast } from "react-toastify";
 
 export const AuthContext = createContext(null);
 
-const backendUrl = 'http://localhost:3000';
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const AuthContextProvider = ({ children }) => {
 
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
     const [getSubjectLoading, setGetSubjectsLoading] = useState(false);
     const [submissions, setSubmissions] = useState([]);
     const [isPopupOpen, setPopupOpen] = useState(false);
+    const [emailPageLoading, setemailPageLoading] = useState(false);
+    const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [getSubmmisonLoading, setGetSubmmisonLoading] = useState(false);
     const [tasks, setTasks] = useState([]);
@@ -60,15 +63,23 @@ const AuthContextProvider = ({ children }) => {
     };
     const Logout = async () => {
         try {
-            await axios.get('http://localhost:3000/api/logout', {}, { withCredentials: true });
-            localStorage.removeItem('loggedIn');
-            toast.error('Logout')
-            window.location.href = '/login';
+            await axios.get(`${backendUrl}api/logout`, {
+                withCredentials: true,
+            });
+
+            localStorage.removeItem("loggedIn");
+            localStorage.removeItem("user");
+            setUser(null);
+            setLoggedIn(false);
+            toast.success("Logged out");
+
+            window.location.href = "/login";
         } catch (error) {
-            console.log("Error while logout");
-            toast.error("Error");
+            console.error("Error while logout:", error);
+            toast.error("Logout failed");
         }
     };
+
     const loginhandle = async (Data) => {
         setLoginPageLoading(true);
         try {
@@ -92,7 +103,7 @@ const AuthContextProvider = ({ children }) => {
     const getSubjects = async () => {
         setGetSubjectsLoading(true);
         try {
-            const result = await axios.get('http://localhost:3000/api/subjects', {
+            const result = await axios.get(`${backendUrl}api/subjects`, {
                 withCredentials: true,
                 headers: { "Content-Type": "application/json" }
             })
@@ -323,7 +334,7 @@ const AuthContextProvider = ({ children }) => {
             } else {
                 toast.error(result.data.message);
             }
-        
+
 
         } catch (error) {
             console.log(error.message)
@@ -332,34 +343,83 @@ const AuthContextProvider = ({ children }) => {
             setGetSubmmisonLoading(false);
         }
     }
-    const removeSubject = async (Data)=>{
-        try { 
-            const result = await axios.delete(`${backendUrl}/api/subject`,{
-                data:Data,
-                withCredentials:true,
-                headers:{
-                    "Content-Type":"application/json"
+    const removeSubject = async (Data) => {
+        try {
+            const result = await axios.delete(`${backendUrl}/api/subject`, {
+                data: Data,
+                withCredentials: true,
+                headers: {
+                    "Content-Type": "application/json"
                 }
             })
 
-            if(result.data.success){
-                setSubjects(prev=>prev.filter(subject => subject._id!==Data.subjectId));
+            if (result.data.success) {
+                setSubjects(prev => prev.filter(subject => subject._id !== Data.subjectId));
                 toast.success(result.data.message);
-            }else{
+            } else {
 
                 toast.success(result.data.message);
             }
         } catch (error) {
             console.log(error);
             toast.success(error.message);
-            
         }
 
-
-
     }
-    const contextValue = {
+    const getOtp = async (Data) => {
+        console.log(Data)
+        setemailPageLoading(true);
+        try {
+            const result = await axios.post(`${backendUrl}/api/user/getOtp`, Data, {
+                withCredentials: true,
+                headers: {
+                    "Content-type": "application/json"
+                }
+            })
+            console.log(result.data)
 
+            if (result.data.success) {
+
+                setStep(2);
+            } else {
+                toast.error(result.data.message);
+            }
+
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message);
+
+        } finally {
+            setemailPageLoading(false);
+        }
+    }
+    const verifyOtp = async (Data)=>{
+        setemailPageLoading(true);
+        try {
+        const result  = await axios.post(`${backendUrl}/api/user/resetpassword`,Data,{
+            withCredentials:true,
+            headers:{
+             "Content-Type":"application/json"
+            }
+        })
+        if(result.data.success){
+            toast.success(result.data.message);
+            window.location.href = "/home";
+        }else{
+            toast.error(result.data.message);
+        }
+            
+        } catch (error) {
+            toast.error(error.message)
+        }
+        finally{
+            setemailPageLoading(false);
+        }
+    }
+    useEffect(()=>{
+        console.log(backendUrl)
+    })
+    const contextValue = {
         setUser,
         signupHandle,
         loginhandle,
@@ -378,7 +438,8 @@ const AuthContextProvider = ({ children }) => {
         getSubjectLoading, setGetSubjectsLoading, removeTask, isAddTaskOpen, setAddTaskOpen,
         taskFormLoading, settaskFormLoading, isSubmitPopupOpen, setSubmitPopupOpen, submitTask,
         isSubmitting, setIsSubmitting, isPopupOpen, setPopupOpen, getSubmissions,
-        getSubmmisonLoading, setGetSubmmisonLoading, submissions,removeSubject
+        getSubmmisonLoading, setGetSubmmisonLoading, submissions, removeSubject, emailPageLoading,
+        step, setStep, getOtp,verifyOtp
 
     };
 

@@ -3,19 +3,20 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    require: true,
+    required: true, 
   },
   email: {
     type: String,
-    require: true,
+    required: true, 
+    unique: true,
   },
   password: {
     type: String,
-    require: true,
+    required: true,
   },
   department: {
     type: String,
-    require: true,
+    required: true,
   },
   userType: {
     type: String,
@@ -25,13 +26,21 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: null,
   },
+  Otp: {
+    type: Number,
+    default: null,
+  },
+  OtpExpireDate: {
+    type: Date,
+    default: null,
+  },
   subjects: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "subjects", 
+      ref: "subjects",
     },
   ],
 });
 
-const userModel =   mongoose.model("/user", userSchema);
+const userModel = mongoose.model("user", userSchema);
 export default userModel;

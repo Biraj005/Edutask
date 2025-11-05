@@ -98,8 +98,6 @@ const SubjectCard = () => {
     } else if(type==='submission') {
       alert("No PDF attached for this task!");
       return;
-
-
     }
 
   };

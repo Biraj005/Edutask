@@ -8,6 +8,7 @@ import SubjectCard from "./components/SubjectCard/SubjectCard";
 import { ToastContainer } from "react-toastify";
 import { AuthContext } from "./Store/AuthContext";
 import MyAccount from "./pages/Myaccount";
+import ForgotPasswordPage from "./pages/forgotPasswodage";
 
 function App() {
   const { loggedIn } = useContext(AuthContext);
@@ -16,7 +17,10 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={!loggedIn ?<Homepage />:<Navigate to='/home'/>} />
+          <Route
+            path="/"
+            element={!loggedIn ? <Homepage /> : <Navigate to="/home" />}
+          />
           <Route
             path="/login"
             element={loggedIn ? <Navigate to="/home" /> : <Loginpage />}
@@ -30,8 +34,15 @@ function App() {
             element={loggedIn ? <SubjectCard /> : <Navigate to="/login" />}
           />
           <Route
-          path="/account"
-          element={loggedIn ? <MyAccount/> : <Navigate to='/login'/>}/>
+            path="/account"
+            element={loggedIn ? <MyAccount /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              loggedIn ? <Navigate to="/home" /> : <ForgotPasswordPage />
+            }
+          />
         </Routes>
       </BrowserRouter>
 

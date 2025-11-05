@@ -92,3 +92,19 @@
   transform: translateY(-2px);
   box-shadow: 0 0 25px rgba(255,209,102,0.9);
 }
+
+.forgot-btn {
+  margin-top: 0.5rem;
+  background: none;
+  border: none;
+  color: #ffd166;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.forgot-btn:hover {
+  color: #ffeb99;
+  text-shadow: 0 0 5px rgba(255, 209, 102, 0.6);
+}

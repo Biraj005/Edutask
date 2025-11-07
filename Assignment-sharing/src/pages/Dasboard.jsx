@@ -39,6 +39,9 @@ const Dashboard = () => {
         setSubjects(prev => [...prev, { ...newSubjectData, pendingTasks: 0, tasks: [] }]);
         setPopupOpen(false);
     };
+    useEffect(()=>{
+        console.log(subjects.length)
+    })
     return (
         <div className="dashboard-container">
             {isSidebarOpen && <Sidebar user={user} onClose={() => setSidebarOpen(false)} />}

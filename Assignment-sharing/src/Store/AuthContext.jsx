@@ -63,7 +63,7 @@ const AuthContextProvider = ({ children }) => {
     };
     const Logout = async () => {
         try {
-            await axios.get(`${backendUrl}api/logout`, {
+            await axios.get(`${backendUrl}/api/logout`, {
                 withCredentials: true,
             });
 
@@ -103,14 +103,15 @@ const AuthContextProvider = ({ children }) => {
     const getSubjects = async () => {
         setGetSubjectsLoading(true);
         try {
-            const result = await axios.get(`${backendUrl}api/subjects`, {
+            const result = await axios.get(`${backendUrl}/api/subjects`, {
                 withCredentials: true,
                 headers: { "Content-Type": "application/json" }
             })
+           
             setSubjects(result.data.subjects);
         } catch (error) {
             toast.error('Error');
-            console.log('Error while getting subjects');
+            console.log(error.message);
         }
         finally {
             setGetSubjectsLoading(false);

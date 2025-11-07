@@ -4,7 +4,10 @@ import { toast } from "react-toastify";
 
 export const AuthContext = createContext(null);
 
-const backendUrl = import.meta.env.VITE_BACKEND_URL;
+const backendUrl = import.meta.env.NODE_ENV === 'production'
+  ? '/api'
+  : import.meta.env.VITE_BACKEND_URL;
+
 
 const AuthContextProvider = ({ children }) => {
 
